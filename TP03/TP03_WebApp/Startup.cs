@@ -8,11 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TP03_WebApp.Entidades;
 
 namespace TP03_WebApp
 {
     public class Startup
     {
+        static List<Cadete> Cadetes = new List<Cadete>();
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,6 +26,7 @@ namespace TP03_WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddSingleton(Cadetes);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
