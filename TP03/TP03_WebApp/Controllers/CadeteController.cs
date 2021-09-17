@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TP03_WebApp.Entidades;
+using TP03_WebApp.Models;
 
 namespace TP03_WebApp.Controllers
 {
@@ -12,19 +13,29 @@ namespace TP03_WebApp.Controllers
     {
         static int id = 0;
         private readonly ILogger<CadeteController> _logger;
-        private readonly List<Cadete> cadetes;
+        private readonly DBTemp _DB;
 
-        public CadeteController(ILogger<CadeteController> logger, List<Cadete> Cadetes)
+        public CadeteController(ILogger<CadeteController> logger, DBTemp DB)
         {
             _logger = logger;
-            cadetes = Cadetes;
+            _DB = DB;
         }
         public IActionResult Index()
         {
-            Cadete nuevoCadete = new(++id, "nombre", "direccion", 212121);
-            cadetes.Add(nuevoCadete);
+            return View(_DB.Cadeteria.Cadetes);
+        }
 
-            return View(cadetes);
+        public IActionResult DarAltaCadete(string nombre, string apellido, string direccion, string tel)
+        {
+            Cadete nuevoCadete = new(++id, nombre, apellido, direccion, Convert.ToInt64(tel));
+            _DB.Cadeteria.Cadetes.Add(nuevoCadete);
+
+            return View();
+        }
+
+        public IActionResult AltaCadetes()
+        {            
+            return View();
         }
     }
 }

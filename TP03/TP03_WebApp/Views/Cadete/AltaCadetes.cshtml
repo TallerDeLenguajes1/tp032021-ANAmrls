@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Alta Cadetes";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Alta Cadetes</h1>
+</div>
+<form class="row g-3" asp-action="DarAltaCadete" asp-controller="Cadete" method="post">
+    <div class="col-md-6 mt-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+    <div class="col-md-6 mt-3">
+        <label for="apellido" class="form-label">Apellido</label>
+        <input type="text" class="form-control" id="apellido" name="apellido" required>
+    </div>
+    <div class="col-12  mt-3">
+        <label for="direccion" class="form-label">Dirección</label>
+        <input type="text" class="form-control" id="direccion" required>
+    </div>
+    <div class="col-md-6  mt-3">
+        <label for="tel" class="form-label">Número de teléfono</label>
+        <input type="tel" class="form-control" id="tel" name="tel" placeholder="Ej: 3815121212" pattern="[0-9]{10}" required>
+    </div>
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+
