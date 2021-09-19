@@ -12,12 +12,8 @@ namespace TP03_WebApp.Entidades
         private string apellido;
         private string direccion;
         private long telefono;
-
-        public Cadete()
-        {
-
-        }
-
+        private List<Pedido> pedidosDelDia;
+        
         public Cadete(int id, string nombre, string apellido, string direccion, long telefono)
         {
             Id = id;
@@ -25,6 +21,7 @@ namespace TP03_WebApp.Entidades
             Apellido = apellido;
             Direccion = direccion;
             Telefono = telefono;
+            PedidosDelDia = new();
         }
 
         public int Id { get => id; set => id = value; }
@@ -32,5 +29,6 @@ namespace TP03_WebApp.Entidades
         public string Direccion { get => direccion; set => direccion = value; }
         public long Telefono { get => telefono; set => telefono = value; }
         public string Apellido { get => apellido; set => apellido = value; }
+        public List<Pedido> PedidosDelDia { get => pedidosDelDia; set => pedidosDelDia = value; }
     }
 }

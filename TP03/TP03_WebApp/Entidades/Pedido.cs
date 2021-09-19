@@ -14,12 +14,22 @@ namespace TP03_WebApp.Entidades
     {
         private int nro;
         private string obs;
-        private string cliente;
+        private Cliente cliente;
         private EstadoPedido estado;
+
+        public Pedido(int nroPedido, string obs, int idCliente, string nombre, string apellido, string direccion,
+                      long tel)
+        {
+            Cliente = new Cliente(idCliente, nombre, apellido, direccion, tel);
+            Nro = nroPedido;
+            Obs = obs;
+            Estado = EstadoPedido.pendiente;
+            
+        }
 
         public int Nro { get => nro; set => nro = value; }
         public string Obs { get => obs; set => obs = value; }
-        public string Cliente { get => cliente; set => cliente = value; }
+        public Cliente Cliente { get => cliente; set => cliente = value; }
         public EstadoPedido Estado { get => estado; set => estado = value; }
     }
 }

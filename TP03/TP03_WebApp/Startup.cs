@@ -16,7 +16,7 @@ namespace TP03_WebApp
     public class Startup
     {
         //static List<Cadete> Cadetes = new List<Cadete>();
-        static DBTemp DB = new DBTemp();
+        static readonly DBTemp DB = new();
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

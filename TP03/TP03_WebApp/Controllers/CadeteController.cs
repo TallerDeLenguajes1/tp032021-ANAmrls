@@ -25,17 +25,17 @@ namespace TP03_WebApp.Controllers
             return View(_DB.Cadeteria.Cadetes);
         }
 
+        public IActionResult AltaCadetes()
+        {
+            return View();
+        }
+
         public IActionResult DarAltaCadete(string nombre, string apellido, string direccion, string tel)
         {
             Cadete nuevoCadete = new(++id, nombre, apellido, direccion, Convert.ToInt64(tel));
             _DB.Cadeteria.Cadetes.Add(nuevoCadete);
 
-            return View();
-        }
-
-        public IActionResult AltaCadetes()
-        {            
-            return View();
+            return View("Index", _DB.Cadeteria.Cadetes);
         }
     }
 }

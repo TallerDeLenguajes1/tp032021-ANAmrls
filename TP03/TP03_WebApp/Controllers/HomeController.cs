@@ -13,17 +13,17 @@ namespace TP03_WebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly List<Cadete> cadetes;
+        private readonly DBTemp _DB;
 
-        public HomeController(ILogger<HomeController> logger, List<Cadete> Cadetes)
+        public HomeController(ILogger<HomeController> logger, DBTemp DB)
         {
             _logger = logger;
-            cadetes = Cadetes;
+            _DB = DB;
         }
 
         public IActionResult Index()
         {
-            return View(cadetes);
+            return View();
         }
 
         public IActionResult Privacy()

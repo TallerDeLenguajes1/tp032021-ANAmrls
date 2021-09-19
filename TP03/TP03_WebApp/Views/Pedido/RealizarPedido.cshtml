@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Realizar Pedido";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Realice su Pedidio</h1>
+</div>
+<form asp-action="CrearPedido" asp-controller="Pedido" method="post">
+    <fieldset class="row g-3">
+        <legend class="col-md-6 mt-3">Datos Personales</legend>
+        <div class="col-md-6 mt-2">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+        <div class="col-md-6 mt-3">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="apellido" name="apellido" required>
+        </div>
+        <div class="col-12  mt-3">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input type="text" class="form-control" id="direccion" name="direccion" required>
+        </div>
+        <div class="col-md-6  mt-3">
+            <label for="tel" class="form-label">Número de teléfono</label>
+            <input type="tel" class="form-control" id="tel" name="tel" placeholder="Ej: 3815121212" pattern="[0-9]{10}" required>
+        </div>
+        <div class="col-md-6  mt-3">
+            <label for="idCliente" class="form-label">Nro de Cliente</label>
+            <input type="number" class="form-control" id="idCliente" name="idCliente" required>
+        </div>
+    </fieldset>
+    <fieldset class="mt-4">
+        <legend>Detalles del Pedido</legend>
+        <div class="mb-3 mt-2">
+            <label for="obs" class="form-label">Observaciones</label>
+            <textarea class="form-control" id="obs" rows="3"></textarea>
+        </div>
+    </fieldset>    
+    <div class="text-center mt-3">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+

@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model List<TP03_WebApp.Entidades.Pedido>
+
+<div class="text-center">
+    <h1 class="display-4">Realice su Pedido</h1>
+    @foreach (var item in Model)
+    {
+        @item.Nro;
+        @item.Cliente.Nombre;
+        <br />
+    }
+
+
+<div class="btn">
+    <a class="btn btn-primary" asp-area="" asp-controller="Pedido" asp-action="RealizarPedido">Nuevo Pedido</a>
+</div>
+</div>
