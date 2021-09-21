@@ -34,6 +34,7 @@ namespace TP03_WebApp.Controllers
         {
             Cadete nuevoCadete = new(++id, nombre, apellido, direccion, Convert.ToInt64(tel));
             _DB.Cadeteria.Cadetes.Add(nuevoCadete);
+            _DB.GuardarCadetesEnBD(nuevoCadete);
 
             return View("Index", _DB.Cadeteria.Cadetes);
         }

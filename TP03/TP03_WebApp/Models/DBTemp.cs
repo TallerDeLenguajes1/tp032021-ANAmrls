@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
+using System.Text.Json;
 using TP03_WebApp.Entidades;
 
 namespace TP03_WebApp.Models
@@ -13,6 +11,42 @@ namespace TP03_WebApp.Models
         public DBTemp()
         {
             Cadeteria = new Cadeteria();
+
+            LeerBD();
+        }
+
+        public void GuardarCadetesEnBD(Cadete cadete)
+        {
+            string rutaArchivo = @"ListadoCadetes.Json";
+
+            using (FileStream cadetesArchivo = new FileStream(rutaArchivo, FileMode.Append))
+            {
+                using (StreamWriter strWriter = new StreamWriter(cadetesArchivo))
+                {
+                    string strJason = JsonSerializer.Serialize(cadete);
+                    strWriter.WriteLine(strJason);
+                }
+            }
+        }
+
+        public void LeerBD()
+        {
+            string rutaArchivo = @"ListadoCadetes.Json";
+
+            if (File.Exists(rutaArchivo))
+            {
+                using (FileStream cadetesArchivo = new FileStream(rutaArchivo, FileMode.Open))
+                {
+                    using(StreamReader strReader = new StreamReader(cadetesArchivo))
+                    {
+                        while (!strReader.EndOfStream)
+                        {
+                            string cadete = strReader.ReadLine();
+                            Cadeteria.Cadetes.Add(JsonSerializer.Deserialize<Cadete>(cadete));
+                        }
+                    }
+                }
+            }
         }
     }
 }
