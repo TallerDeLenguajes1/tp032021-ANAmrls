@@ -23,7 +23,7 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View(_DB.Cadeteria.Pedidos);
+            return View(_DB.Cadeteria);
         }
 
         public IActionResult RealizarPedido()
@@ -37,7 +37,29 @@ namespace TP03_WebApp.Controllers
             Pedido nuevoPedido = new(++nro, obs, idCliente, nombre, apellido, direccion, tel);
             _DB.Cadeteria.Pedidos.Add(nuevoPedido);
 
-            return View("Index", _DB.Cadeteria.Pedidos);
+            return View("Index", _DB.Cadeteria);
+        }
+
+        public IActionResult AsignarPedido(int idPedido, int idCadete)
+        {
+            QuitarPedido(idPedido);
+
+            if (idCadete != 0)
+            {
+                Cadete cadete = _DB.Cadeteria.Cadetes.Where(a => a.Id == idCadete).First();
+                Pedido pedido = _DB.Cadeteria.Pedidos.Where(b => b.Nro == idPedido).First();
+                cadete.PedidosDelDia.Add(pedido);
+            }
+
+            return View("Index", _DB.Cadeteria);
+        }
+
+        private void QuitarPedido(int idPedido)
+        {            
+            Pedido pedido = _DB.Cadeteria.Pedidos.Where(b => b.Nro == idPedido).First();
+
+            _DB.Cadeteria.Cadetes.ForEach(cadete => cadete.PedidosDelDia.Remove(pedido));
+            
         }
     }
 }

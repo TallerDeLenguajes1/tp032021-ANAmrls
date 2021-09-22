@@ -12,6 +12,7 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
                 <th scope="col">Teléfono</th>
+                <th scope="col">Pedidos</th>
                 <th scope="col">Eliminar</th>
             </tr>
         </thead>
@@ -23,6 +24,7 @@
                 <td>@item.Nombre</td>
                 <td>@item.Apellido</td>
                 <td>@item.Telefono</td>
+                <td>@item.PedidosDelDia.Count()</td>
                 <td>
                     <form asp-action="EliminacionCheck" asp-controller="Cadete" method="post">
                         <input type="hidden" id="idCadete" name="idCadete" value="@item.Id">

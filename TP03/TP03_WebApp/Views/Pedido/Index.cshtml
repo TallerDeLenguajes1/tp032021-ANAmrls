@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model List<TP03_WebApp.Entidades.Pedido>
+@model TP03_WebApp.Entidades.Cadeteria
 
 <div class="text-center">
     <h1 class="display-3 mb-3 text-primary">Listado de Pedidos</h1>
@@ -11,18 +11,37 @@
                 <th scope="col">Nro</th>
                 <th scope="col">Cliente</th>
                 <th scope="col">Dirección</th>
-                <th scope="col"></th>
+                <th scope="col">Asignar Cadete</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Pedidos)
             {
-                <tr>
-                    <th scope="row">@item.Nro</th>
-                    <td>@item.Cliente.Nombre @item.Cliente.Apellido</td>
-                    <td>@item.Cliente.Direccion</td>
-                    <td></td>
-                </tr>
+            <tr>
+                <th scope="row">@item.Nro</th>
+                <td>@item.Cliente.Nombre @item.Cliente.Apellido</td>
+                <td>@item.Cliente.Direccion</td>
+                <td>
+                    <form class="row justify-content-around" asp-action="AsignarPedido" asp-controller="Pedido" method="post">
+                        <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
+                        <select class="form-select col-sm-5" name="idCadete">
+                            <option selected>Seleccionar</option>
+                            @foreach (var cadete in Model.Cadetes)
+                            {
+                                if (cadete.PedidosDelDia.Exists(a => a.Nro == item.Nro))
+                                {
+                                    <option selected value="@cadete.Id">@cadete.Apellido (@cadete.PedidosDelDia.Count())</option>
+                                }
+                                else
+                                {
+                                    <option value="@cadete.Id">@cadete.Apellido</option>
+                                }
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-info col-sm-6">Asignar Cadete</button>
+                    </form>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
