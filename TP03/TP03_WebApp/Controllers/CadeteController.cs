@@ -38,5 +38,27 @@ namespace TP03_WebApp.Controllers
 
             return View("Index", _DB.Cadeteria.Cadetes);
         }
+
+        public IActionResult EliminacionCheck(int idCadete)
+        {
+            foreach (Cadete item in _DB.Cadeteria.Cadetes)
+            {
+                if (idCadete == item.Id)
+                {
+                    return View(item);
+                }                
+            }
+
+            return View();
+        }
+
+        public IActionResult EliminarCadete(int idCadete)
+        {
+            _DB.Cadeteria.Cadetes.RemoveAll(cadete => cadete.Id == idCadete);
+
+            _DB.EliminarCadeteDeBD();
+
+            return View("Index", _DB.Cadeteria.Cadetes);
+        }
     }
 }

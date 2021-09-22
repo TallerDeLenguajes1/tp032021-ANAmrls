@@ -1,0 +1,33 @@
+﻿@model TP03_WebApp.Entidades.Cadete
+
+<div class="text-center">
+    <h1 class="display-4 mb-3 text-primary">Verifique su selección</h1>
+    <h2>Desea eliminar al cadete:</h2>
+    <table class="table table-bordered">
+        <thead class="table table-dark ">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Teléfono</th>
+            </tr>
+        </thead>
+        <tbody class="table-danger">
+            <tr>
+                <th scope="row">@Model.Id</th>
+                <td>@Model.Nombre</td>
+                <td>@Model.Apellido</td>
+                <td>@Model.Telefono</td>
+            </tr>
+        </tbody>
+    </table>
+    <form class="row g-3" asp-action="EliminarCadete" asp-controller="Cadete" method="post">
+        <div class="col-md-6 mt-3">
+            <a class="btn btn-primary" asp-area="" asp-controller="Cadete" asp-action="Index">Cancelar</a>
+        </div>
+        <div class="col-md-6 mt-3">
+            <input type="hidden" id="idCadete" name="idCadete" value="@Model.Id">
+            <button type="submit" class="btn btn-primary">Aceptar</button>
+        </div>
+    </form>
+</div>

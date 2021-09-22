@@ -48,5 +48,23 @@ namespace TP03_WebApp.Models
                 }
             }
         }
+
+        public void EliminarCadeteDeBD()
+        {
+            string rutaArchivo = @"ListadoCadetes.Json";
+
+            using (FileStream cadetesArchivo = new FileStream(rutaArchivo, FileMode.Create))
+            {
+                using (StreamWriter strWriter = new StreamWriter(cadetesArchivo))
+                {
+                    foreach (Cadete item in Cadeteria.Cadetes)
+                    {
+                        string strJason = JsonSerializer.Serialize(item);
+                        strWriter.WriteLine(strJason);
+                    }
+                    
+                }
+            }
+        }
     }
 }
