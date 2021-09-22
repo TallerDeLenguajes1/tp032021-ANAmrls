@@ -4,7 +4,7 @@
 @model List<TP03_WebApp.Entidades.Cadete>
 
 <div class="text-center">
-    <h1 class="display-3 mb-3 text-primary">Cadetes</h1>
+    <h1 class="display-3 mb-3 text-primary">Listado de Cadetes</h1>
     <table class="table table-dark table-striped table-bordered">
         <thead>
             <tr>
@@ -13,7 +13,7 @@
                 <th scope="col">Apellido</th>
                 <th scope="col">Teléfono</th>
                 <th scope="col">Pedidos</th>
-                <th scope="col">Eliminar</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@
                 <td>
                     <form asp-action="EliminacionCheck" asp-controller="Cadete" method="post">
                         <input type="hidden" id="idCadete" name="idCadete" value="@item.Id">
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
                     </form>
                 </td>
             </tr>
