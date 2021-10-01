@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Modificar Cadete";
+}
+@model TP03_WebApp.Entidades.Cadete
+
+<div class="text-center">
+    <h1 class="display-4">Modificar Cadete</h1>
+</div>
+<form class="row g-3" asp-action="ModificarCadete" asp-controller="Cadete" method="post">
+    <div class="col-md-6 mt-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" value="@Model.Nombre" required>
+    </div>
+    <div class="col-md-6 mt-3">
+        <label for="apellido" class="form-label">Apellido</label>
+        <input type="text" class="form-control" id="apellido" name="apellido" value="@Model.Nombre" required>
+    </div>
+    <div class="col-12  mt-3">
+        <label for="direccion" class="form-label">Dirección</label>
+        <input type="text" class="form-control" id="direccion" name="direccion" value="@Model.Direccion" required>
+    </div>
+    <div class="col-md-6  mt-3">
+        <label for="tel" class="form-label">Número de teléfono</label>
+        <input type="tel" class="form-control" id="tel" name="tel" value="@Model.Telefono" pattern="[0-9]{10}" required>
+    </div>
+    <div class="col-md-6  mt-3">
+        <label for="id" class="form-label">Id</label>
+        <input type="text" class="form-control" id="id" name="id" value="@Model.Id" readonly>
+    </div>
+    <div class="col-md-6 mt-3">
+        <a class="btn btn-primary" asp-controller="Cadete" asp-action="Index">Cancelar</a>
+    </div>
+    <div class="col-md-6 mt-3">
+        <button type="submit" class="btn btn-primary">Confirmar Cambios</button>
+    </div>
+</form>

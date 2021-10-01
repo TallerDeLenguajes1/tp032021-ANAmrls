@@ -34,7 +34,7 @@ namespace TP03_WebApp.Controllers
         {
             Cadete nuevoCadete = new(++id, nombre, apellido, direccion, Convert.ToInt64(tel));
             _DB.Cadeteria.Cadetes.Add(nuevoCadete);
-            _DB.GuardarCadetesEnBD(nuevoCadete);
+            _DB.GuardarCadeteEnBD(nuevoCadete);
 
             return View("Index", _DB.Cadeteria.Cadetes);
         }
@@ -56,7 +56,40 @@ namespace TP03_WebApp.Controllers
         {
             _DB.Cadeteria.Cadetes.RemoveAll(cadete => cadete.Id == idCadete);
 
-            _DB.EliminarCadeteDeBD();
+            _DB.GuardarListaCadetesEnBD();
+
+            return View("Index", _DB.Cadeteria.Cadetes);
+        }
+
+        public IActionResult ModificarCadeteForm(int idCadete)
+        {
+            foreach (Cadete item in _DB.Cadeteria.Cadetes)
+            {
+                if (idCadete == item.Id)
+                {
+                    return View(item);
+                }
+            }
+
+            return View();
+        }
+
+        public IActionResult ModificarCadete(string nombre, string apellido, string direccion, string tel, int id)
+        {
+            int idCadete = Convert.ToInt32(id);
+
+            foreach (Cadete item in _DB.Cadeteria.Cadetes)
+            {
+                if (item.Id == idCadete)
+                {
+                    item.Nombre = nombre;
+                    item.Apellido = apellido;
+                    item.Direccion = direccion;
+                    item.Telefono = Convert.ToInt64(tel);
+                }
+            }
+
+            _DB.GuardarListaCadetesEnBD();
 
             return View("Index", _DB.Cadeteria.Cadetes);
         }

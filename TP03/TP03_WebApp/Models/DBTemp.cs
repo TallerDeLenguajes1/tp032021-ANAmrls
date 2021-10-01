@@ -15,7 +15,7 @@ namespace TP03_WebApp.Models
             LeerBD();
         }
 
-        public void GuardarCadetesEnBD(Cadete cadete)
+        public void GuardarCadeteEnBD(Cadete cadete)
         {
             string rutaArchivo = @"ListadoCadetes.Json";
 
@@ -49,7 +49,7 @@ namespace TP03_WebApp.Models
             }
         }
 
-        public void EliminarCadeteDeBD()
+        public void GuardarListaCadetesEnBD()
         {
             string rutaArchivo = @"ListadoCadetes.Json";
 

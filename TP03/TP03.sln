@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TP03_ConsoleApp", "TP03_Con
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TP03_WebApp", "TP03_WebApp\TP03_WebApp.csproj", "{E32DE3EA-C7D1-410E-865A-CD6B9BB0EB40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntidadesSistema", "EntidadesSistema\EntidadesSistema.csproj", "{F4CF8E07-6283-4471-8E84-523A6FC26A46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntidadesSistema", "EntidadesSistema\EntidadesSistema.csproj", "{F4CF8E07-6283-4471-8E84-523A6FC26A46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
