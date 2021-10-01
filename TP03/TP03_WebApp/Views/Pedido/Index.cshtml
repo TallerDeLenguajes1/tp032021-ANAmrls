@@ -11,6 +11,7 @@
                 <th scope="col">Nro</th>
                 <th scope="col">Cliente</th>
                 <th scope="col">Dirección</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Asignar Cadete</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                 <th scope="row">@item.Nro</th>
                 <td>@item.Cliente.Nombre @item.Cliente.Apellido</td>
                 <td>@item.Cliente.Direccion</td>
+                <td>@item.Estado</td>
                 <td>
                     <form class="row justify-content-around" asp-action="AsignarPedido" asp-controller="Pedido" method="post">
                         <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">

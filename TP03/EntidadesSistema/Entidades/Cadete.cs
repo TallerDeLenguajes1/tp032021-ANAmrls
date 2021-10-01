@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TP03_WebApp.Entidades
@@ -22,6 +23,12 @@ namespace TP03_WebApp.Entidades
             Direccion = direccion;
             Telefono = telefono;
             PedidosDelDia = new();
+        }
+
+        [JsonConstructor]
+        public Cadete()
+        {
+
         }
 
         public int Id { get => id; set => id = value; }

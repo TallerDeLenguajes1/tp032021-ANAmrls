@@ -1,0 +1,2 @@
+{"Id":1,"Nombre":"Cliente","Direccion":"12 de Octubre 2020","Telefono":3816565656,"Apellido":"Prueba","PedidosDelDia":[{"Nro":1,"Obs":"lfkjflkfajghf","Cliente":{"Id":5365,"Nombre":"P","Direccion":"42 Wallaby Way, Sydney","Telefono":3816272727,"Apellido":"Sherman"},"Estado":0}]}
+{"Id":2,"Nombre":"Cadete","Direccion":"Av Siempreviva 1234","Telefono":3815666666,"Apellido":"Cadet\u00EDn","PedidosDelDia":[{"Nro":2,"Obs":"jfgnlkgjhflgbjndb","Cliente":{"Id":1321,"Nombre":"Cliente","Direccion":"12 de Octubre 2020","Telefono":3816565656,"Apellido":"Prueba"},"Estado":0}]}

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TP03_WebApp.Entidades
 {
     public enum EstadoPedido
     {
-        pendiente,
-        entregado
+        Pendiente,
+        Entregado
     }
     public class Pedido
     {
@@ -23,8 +24,13 @@ namespace TP03_WebApp.Entidades
             Cliente = new Cliente(idCliente, nombre, apellido, direccion, tel);
             Nro = nroPedido;
             Obs = obs;
-            Estado = EstadoPedido.pendiente;
-            
+            Estado = EstadoPedido.Pendiente;
+        }
+
+        [JsonConstructor]
+        public Pedido()
+        {
+
         }
 
         public int Nro { get => nro; set => nro = value; }

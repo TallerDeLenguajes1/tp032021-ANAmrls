@@ -12,7 +12,8 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
                 <th scope="col">Teléfono</th>
-                <th scope="col">Pedidos</th>
+                <th scope="col">Pedidos Pendientes</th>
+                <th scope="col">Pedidos Entrgados</th>
                 <th scope="col">Modificar</th>
                 <th scope="col">Eliminar</th>
             </tr>
@@ -25,7 +26,8 @@
                 <td class="align-middle">@item.Nombre</td>
                 <td class="align-middle">@item.Apellido</td>
                 <td class="align-middle">@item.Telefono</td>
-                <td class="align-middle">@item.PedidosDelDia.Count()</td>
+                <td class="align-middle">@item.PedidosDelDia.Count(x => x.Estado == TP03_WebApp.Entidades.EstadoPedido.Pendiente)</td>
+                <td class="align-middle">@item.PedidosDelDia.Count(x => x.Estado == TP03_WebApp.Entidades.EstadoPedido.Entregado)</td>
                 <td class="align-middle">
                     <form asp-action="ModificarCadeteForm" asp-controller="Cadete" method="post">
                         <input type="hidden" id="idCadete" name="idCadete" value="@item.Id">

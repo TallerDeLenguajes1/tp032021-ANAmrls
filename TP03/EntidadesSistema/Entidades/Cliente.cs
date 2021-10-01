@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TP03_WebApp.Entidades
@@ -20,6 +21,12 @@ namespace TP03_WebApp.Entidades
             Apellido = apellido;
             Direccion = direccion;
             Telefono = tel;
+        }
+
+        [JsonConstructor]
+        public Cliente()
+        {
+
         }
 
         public int Id { get => id; set => id = value; }
