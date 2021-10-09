@@ -11,14 +11,17 @@ namespace TP03_WebApp.Controllers
 {
     public class PedidoController : Controller
     {
-        static int nro = 0;
+        private static int nro;
         private readonly ILogger<PedidoController> _logger;
         private readonly DBTemp _DB;
+
+        public static int Nro { get => nro; set => nro = value; }
 
         public PedidoController(ILogger<PedidoController> logger, DBTemp dB)
         {
             _logger = logger;
             _DB = dB;
+            Nro = _DB.AutonumericoPedido;
         }
 
         public IActionResult Index()
@@ -32,17 +35,21 @@ namespace TP03_WebApp.Controllers
         }
 
         public IActionResult CrearPedido(string obs, int idCliente, string nombre, string apellido,
-                                         string direccion, long tel)
+                                         string direccion, string tel)
         {
-            Pedido nuevoPedido = new(++nro, obs, idCliente, nombre, apellido, direccion, tel);
-            _DB.Cadeteria.Pedidos.Add(nuevoPedido);
+            if (long.TryParse(tel, out long telefono))
+            {
+                Pedido nuevoPedido = new(++Nro, obs, idCliente, nombre, apellido, direccion, telefono);
+                _DB.Cadeteria.Pedidos.Add(nuevoPedido);
+                _DB.GuardarPedidoEnBD(nuevoPedido);
+            }
 
             return View("Index", _DB.Cadeteria);
         }
 
-        public IActionResult AsignarPedido(int idPedido, int idCadete)
+        public IActionResult AsignarPedidoACadete(int idPedido, int idCadete)
         {
-            QuitarPedido(idPedido);
+            QuitarPedidoDeCadete(idPedido);
 
             if (idCadete != 0)
             {
@@ -51,15 +58,27 @@ namespace TP03_WebApp.Controllers
                 cadete.PedidosDelDia.Add(pedido);
             }
 
+            _DB.GuardarListaCadetesEnBD();
+
             return View("Index", _DB.Cadeteria);
         }
 
-        private void QuitarPedido(int idPedido)
-        {            
-            Pedido pedido = _DB.Cadeteria.Pedidos.Where(b => b.Nro == idPedido).First();
+        private void QuitarPedidoDeCadete(int idPedido)
+        {
+            Pedido pedido = _DB.Cadeteria.Pedidos.Find(x => x.Nro == idPedido);
 
             _DB.Cadeteria.Cadetes.ForEach(cadete => cadete.PedidosDelDia.Remove(pedido));
             
+        }               
+
+        public IActionResult EliminarPedido(int idPedido)
+        {
+            if (_DB.Cadeteria.Pedidos.RemoveAll(x => x.Nro == idPedido) != 0)
+            {
+                _DB.GuardarListaPedidosEnBD();
+            }
+
+            return View("Index", _DB.Cadeteria);
         }
     }
 }

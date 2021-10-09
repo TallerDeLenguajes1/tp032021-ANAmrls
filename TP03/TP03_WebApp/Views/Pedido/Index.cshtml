@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Listado de Pedidos";
 }
 @model TP03_WebApp.Entidades.Cadeteria
 
@@ -13,6 +13,7 @@
                 <th scope="col">Dirección</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Asignar Cadete</th>
+                <th scope="col">Eliminar</th>
             </tr>
         </thead>
         <tbody>
@@ -24,9 +25,9 @@
                 <td>@item.Cliente.Direccion</td>
                 <td>@item.Estado</td>
                 <td>
-                    <form class="row justify-content-around" asp-action="AsignarPedido" asp-controller="Pedido" method="post">
+                    <form class="row justify-content-around" asp-action="AsignarPedidoACadete" asp-controller="Pedido" method="post">
                         <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
-                        <select class="form-select col-sm-5" name="idCadete">
+                        <select class="form-select col-sm-6" name="idCadete">
                             <option selected>Seleccionar</option>
                             @foreach (var cadete in Model.Cadetes)
                             {
@@ -36,11 +37,21 @@
                                 }
                                 else
                                 {
-                                    <option value="@cadete.Id">@cadete.Apellido</option>
+                                    <option value="@cadete.Id">@cadete.Apellido (@cadete.PedidosDelDia.Count())</option>
                                 }
                             }
                         </select>
-                        <button type="submit" class="btn btn-sm btn-info col-sm-6">Asignar Cadete</button>
+                        <button type="submit" class="btn btn-sm btn-info col-sm-3">Asignar</button>
+                    </form>
+                </td>
+                <td class="align-middle">
+                    <form asp-action="EliminarPedido" asp-controller="Pedido" method="post">
+                        <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
+                        <button type="submit" class="btn btn-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-trash-fill" viewBox="0 0 18 18">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                            </svg>
+                        </button>                    
                     </form>
                 </td>
             </tr>

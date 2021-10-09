@@ -8,27 +8,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
+using NLog.Web;
 
 namespace TP03_WebApp
 {
     public class Startup
-    {
-        //static List<Cadete> Cadetes = new List<Cadete>();
-        static readonly DBTemp DB = new();
+    {     
+
+        static readonly DBTemp DB = new DBTemp(NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger());
         public Startup(IConfiguration configuration)
         {
+           
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
+        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            //services.AddSingleton(Cadetes);
             services.AddSingleton(DB);
         }
 
