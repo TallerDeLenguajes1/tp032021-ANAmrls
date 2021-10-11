@@ -10,18 +10,14 @@ using TP03_WebApp.Models;
 namespace TP03_WebApp.Controllers
 {
     public class PedidoController : Controller
-    {
-        private static int nro;
+    {        
         private readonly ILogger<PedidoController> _logger;
         private readonly DBTemp _DB;
-
-        public static int Nro { get => nro; set => nro = value; }
 
         public PedidoController(ILogger<PedidoController> logger, DBTemp dB)
         {
             _logger = logger;
             _DB = dB;
-            Nro = _DB.AutonumericoPedido;
         }
 
         public IActionResult Index()
@@ -39,7 +35,8 @@ namespace TP03_WebApp.Controllers
         {
             if (long.TryParse(tel, out long telefono))
             {
-                Pedido nuevoPedido = new(++Nro, obs, idCliente, nombre, apellido, direccion, telefono);
+                int nro = _DB.GetAutonumericoDePedido();
+                Pedido nuevoPedido = new(++nro, obs, idCliente, nombre, apellido, direccion, telefono);
                 _DB.Cadeteria.Pedidos.Add(nuevoPedido);
                 _DB.GuardarPedidoEnBD(nuevoPedido);
             }

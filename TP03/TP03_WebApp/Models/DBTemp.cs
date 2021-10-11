@@ -10,25 +10,19 @@ namespace TP03_WebApp.Models
     public class DBTemp
     {
         private readonly ILogger _logger;
-        private int autonumericoCadete;
-        private int autonumericoPedido;
         public Cadeteria Cadeteria { get; set; }
 
         public string RutaArchivoCadetes { get; } = @"ListadoCadetes.Json";
-        public string RutaArchivoPedidos { get; } = @"ListadoPedidos.Json";
-        public int AutonumericoCadete { get => autonumericoCadete; set => autonumericoCadete = value; }
-        public int AutonumericoPedido { get => autonumericoPedido; set => autonumericoPedido = value; }
+        public string RutaArchivoPedidos { get; } = @"ListadoPedidos.Json"; 
 
         public DBTemp(ILogger logger)
         {
             _logger = logger;
             Cadeteria = new Cadeteria();
 
-            LeerCadetesBD();            
-            AutonumericoCadete = GetAutonumericoDeCadete();
+            LeerCadetesBD();
             LeerPedidosBD();
             GetPedidosDeCadetes();
-            AutonumericoPedido = GetAutonumericoDePedido();
         }
 
         public void GuardarCadeteEnBD(Cadete cadete)
@@ -108,6 +102,61 @@ namespace TP03_WebApp.Models
                 string mensaje = "Error Message: " + ex.Message;
                 mensaje += " Stack trace: " + ex.StackTrace;
                 _logger.Error(mensaje);
+            }
+        }        
+
+        private void GetPedidosDeCadetes()
+        {
+            foreach (Cadete item in Cadeteria.Cadetes)
+            {
+                foreach (Pedido pedido in item.PedidosDelDia)
+                {
+                    if (Cadeteria.Pedidos.Contains(pedido))
+                    {
+                        Cadeteria.Pedidos.Add(pedido);
+                    }
+                }
+            }
+        }
+
+        public int GetAutonumericoDeCadete()
+        {
+            if (Cadeteria.Cadetes.Count != 0)
+            {
+                return Cadeteria.Cadetes.Max(x => x.Id);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public bool DeleteCadete(int id)
+        {
+            if (Cadeteria.Cadetes.RemoveAll(cadete => cadete.Id == id) != 0)
+            {
+                GuardarListaCadetesEnBD();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool ModificarCadete(Cadete cadete)
+        {
+            int i = Cadeteria.Cadetes.FindIndex(x => x.Id == cadete.Id);
+
+            if (i >= 0)
+            {
+                Cadeteria.Cadetes[i] = cadete;
+                GuardarListaCadetesEnBD();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -191,34 +240,7 @@ namespace TP03_WebApp.Models
             }
         }
 
-        private void GetPedidosDeCadetes()
-        {
-            foreach (Cadete item in Cadeteria.Cadetes)
-            {
-                foreach (Pedido pedido in item.PedidosDelDia)
-                {
-                    if (Cadeteria.Pedidos.Contains(pedido))
-                    {
-                        Cadeteria.Pedidos.Add(pedido);
-                    }
-                }
-            }
-        }
-
-        private int GetAutonumericoDeCadete()
-        {
-            if (Cadeteria.Cadetes.Count != 0)
-            {
-                return Cadeteria.Cadetes.Max(x => x.Id);
-            }
-            else
-            {
-                return 0;
-            }
-            
-        }
-
-        private int GetAutonumericoDePedido()
+        public int GetAutonumericoDePedido()
         {
             if (Cadeteria.Pedidos.Count != 0)
             {

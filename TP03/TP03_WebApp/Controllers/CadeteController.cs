@@ -10,19 +10,16 @@ using TP03_WebApp.Models;
 namespace TP03_WebApp.Controllers
 {
     public class CadeteController : Controller
-    {
-        private static int id;
+    {           
         private readonly ILogger<CadeteController> _logger;
         private readonly DBTemp _DB;
-
-        public static int Id { get => id; set => id = value; }
-
+        
         public CadeteController(ILogger<CadeteController> logger, DBTemp DB)
         {
             _logger = logger;
             _DB = DB;
-            Id = _DB.AutonumericoCadete;
-        }
+        }               
+
         public IActionResult Index()
         {
             return View(_DB.Cadeteria.Cadetes);
@@ -35,11 +32,27 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult DarAltaCadete(string nombre, string apellido, string direccion, string tel)
         {
-            if (long.TryParse(tel, out long telefono))
+            try
             {
-                Cadete nuevoCadete = new(++Id, nombre, apellido, direccion, telefono);
-                _DB.Cadeteria.Cadetes.Add(nuevoCadete);
-                _DB.GuardarCadeteEnBD(nuevoCadete);
+                if (long.TryParse(tel, out long telefono))
+                {
+                    int id = _DB.GetAutonumericoDeCadete();
+                    Cadete nuevoCadete = new(++id, nombre, apellido, direccion, telefono);
+                    _DB.Cadeteria.Cadetes.Add(nuevoCadete);
+                    _DB.GuardarCadeteEnBD(nuevoCadete);
+                }
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
             }
 
             return View("Index", _DB.Cadeteria.Cadetes);
@@ -52,11 +65,7 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult EliminarCadete(int idCadete)
         {
-            if (_DB.Cadeteria.Cadetes.RemoveAll(cadete => cadete.Id == idCadete) != 0)
-            {
-                _DB.GuardarListaCadetesEnBD();
-            }
-
+            ViewBag.Eliminacion = _DB.DeleteCadete(idCadete);
             return View("Index", _DB.Cadeteria.Cadetes);
         }
 
@@ -67,19 +76,10 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult ModificarCadete(string nombre, string apellido, string direccion, string tel, int id)
         {
-            int i = _DB.Cadeteria.Cadetes.FindIndex(x => x.Id == id);
-
-            if (i >= 0)
+            if (long.TryParse(tel, out long telefono))
             {
-                if (long.TryParse(tel, out long telefono))
-                {
-                    _DB.Cadeteria.Cadetes[i].Nombre = nombre;
-                    _DB.Cadeteria.Cadetes[i].Apellido = apellido;
-                    _DB.Cadeteria.Cadetes[i].Direccion = direccion;
-                    _DB.Cadeteria.Cadetes[i].Telefono = telefono;
-
-                    _DB.GuardarListaCadetesEnBD();
-                }
+                Cadete cadete = new(id, nombre, apellido, direccion, telefono);
+                ViewBag.Modificacion = _DB.ModificarCadete(cadete);
             }
 
             return View("Index", _DB.Cadeteria.Cadetes);
