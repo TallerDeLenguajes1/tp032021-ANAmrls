@@ -163,6 +163,33 @@ namespace TP03_WebApp.Models
             }
         }
 
+        public void PagarACadete(int idCadete)
+        {
+            try
+            {
+                Cadete cadete = Cadeteria.Cadetes.Find(x => x.Id == idCadete);                               
+
+                foreach (Pedido item in cadete.PedidosDelDia)
+                {
+                    if (item.Estado == EstadoPedido.Entregado)
+                    {                        
+                        Cadeteria.Pedidos.RemoveAll(x => x.Nro == item.Nro);
+                    }
+                }
+
+                cadete.PedidosDelDia.RemoveAll(y => y.Estado == EstadoPedido.Entregado);
+
+                GuardarListaCadetesEnBD();
+                GuardarListaPedidosEnBD();
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+        }
+
         public void GuardarPedidoEnBD(Pedido pedido)
         {
             try

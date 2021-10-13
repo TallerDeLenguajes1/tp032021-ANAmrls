@@ -76,10 +76,25 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult ModificarCadete(string nombre, string apellido, string direccion, string tel, int id)
         {
-            if (long.TryParse(tel, out long telefono))
+            try
             {
-                Cadete cadete = new(id, nombre, apellido, direccion, telefono);
-                ViewBag.Modificacion = _DB.ModificarCadete(cadete);
+                if (long.TryParse(tel, out long telefono))
+                {
+                    Cadete cadete = new(id, nombre, apellido, direccion, telefono);
+                    ViewBag.Modificacion = _DB.ModificarCadete(cadete);
+                }
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
             }
 
             return View("Index", _DB.Cadeteria.Cadetes);
@@ -97,6 +112,17 @@ namespace TP03_WebApp.Controllers
             {
                 return View("Index", _DB.Cadeteria.Cadetes);
             }
+        }
+
+        public IActionResult PagarJornalCheck(int idCadete)
+        {
+            return BuscarCadeteEnLista(idCadete);
+        }
+
+        public IActionResult PagarJornal(int idCadete)
+        {
+            _DB.PagarACadete(idCadete);
+            return View("Index", _DB.Cadeteria.Cadetes);
         }
     }
 }

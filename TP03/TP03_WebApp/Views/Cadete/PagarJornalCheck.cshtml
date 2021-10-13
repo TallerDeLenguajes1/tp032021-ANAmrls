@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Confirmar Pago";
+}
+@model TP03_WebApp.Entidades.Cadete
+
+<div class="d-flex justify-content-center">
+    <div class="card border-dark w-50 text-center">
+        <h3 class="card-header bg-dark text-warning">Confirmar Pago</h3>
+        <div class="card-body">
+            <h5 class="card-title">Cadete: @Model.Nombre @Model.Apellido</h5>
+            <p class="card-text">Pedidos Entregados: @Model.PedidosDelDia.Count(x => x.Estado == TP03_WebApp.Entidades.EstadoPedido.Entregado)</p>
+            <p class="card-text">Monto a pagar: $@(Model.PedidosDelDia.Count(x => x.Estado == TP03_WebApp.Entidades.EstadoPedido.Entregado)*100)</p>
+            <form class="row g-3" asp-action="PagarJornal" asp-controller="Cadete" method="post">
+                <div class="col-md-6 mt-3">
+                    <a class="btn btn-secondary" asp-area="" asp-controller="Cadete" asp-action="Index">Cancelar</a>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <input type="hidden" id="idCadete" name="idCadete" value="@Model.Id">
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>    
+</div>

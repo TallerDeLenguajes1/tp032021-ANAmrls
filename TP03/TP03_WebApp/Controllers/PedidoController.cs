@@ -33,12 +33,27 @@ namespace TP03_WebApp.Controllers
         public IActionResult CrearPedido(string obs, int idCliente, string nombre, string apellido,
                                          string direccion, string tel)
         {
-            if (long.TryParse(tel, out long telefono))
+            try
             {
-                int nro = _DB.GetAutonumericoDePedido();
-                Pedido nuevoPedido = new(++nro, obs, idCliente, nombre, apellido, direccion, telefono);
-                _DB.Cadeteria.Pedidos.Add(nuevoPedido);
-                _DB.GuardarPedidoEnBD(nuevoPedido);
+                if (long.TryParse(tel, out long telefono))
+                {
+                    int nro = _DB.GetAutonumericoDePedido();
+                    Pedido nuevoPedido = new(++nro, obs, idCliente, nombre, apellido, direccion, telefono);
+                    _DB.Cadeteria.Pedidos.Add(nuevoPedido);
+                    _DB.GuardarPedidoEnBD(nuevoPedido);
+                }
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
             }
 
             return View("Index", _DB.Cadeteria);
@@ -46,16 +61,31 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult AsignarPedidoACadete(int idPedido, int idCadete)
         {
-            QuitarPedidoDeCadete(idPedido);
-
-            if (idCadete != 0)
+            try
             {
-                Cadete cadete = _DB.Cadeteria.Cadetes.Where(a => a.Id == idCadete).First();
-                Pedido pedido = _DB.Cadeteria.Pedidos.Where(b => b.Nro == idPedido).First();
-                cadete.PedidosDelDia.Add(pedido);
-            }
+                QuitarPedidoDeCadete(idPedido);
 
-            _DB.GuardarListaCadetesEnBD();
+                if (idCadete != 0)
+                {
+                    Cadete cadete = _DB.Cadeteria.Cadetes.Where(a => a.Id == idCadete).First();
+                    Pedido pedido = _DB.Cadeteria.Pedidos.Where(b => b.Nro == idPedido).First();
+                    cadete.PedidosDelDia.Add(pedido);
+                }
+
+                _DB.GuardarListaCadetesEnBD();
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
+            }
 
             return View("Index", _DB.Cadeteria);
         }
