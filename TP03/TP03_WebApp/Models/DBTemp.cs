@@ -150,7 +150,10 @@ namespace TP03_WebApp.Models
 
             if (i >= 0)
             {
-                Cadeteria.Cadetes[i] = cadete;
+                Cadeteria.Cadetes[i].Nombre = cadete.Nombre;
+                Cadeteria.Cadetes[i].Apellido = cadete.Apellido;
+                Cadeteria.Cadetes[i].Direccion = cadete.Direccion;
+                Cadeteria.Cadetes[i].Telefono = cadete.Telefono;
                 GuardarListaCadetesEnBD();
                 return true;
             }
@@ -251,6 +254,71 @@ namespace TP03_WebApp.Models
                 return 0;
             }
 
+        }
+
+        public bool CambiarEstadoPedido(int idPedido)
+        {
+            Cadete cadeteAsignado = BuscarPedidoEnCadetes(idPedido);
+
+            if (cadeteAsignado != null)
+            {
+                Pedido pedido = Cadeteria.Pedidos.Find(x => x.Nro == idPedido);
+                pedido.Estado = EstadoPedido.Entregado;
+
+                Pedido pedidoEnCadete = cadeteAsignado.PedidosDelDia.Find(y => y.Nro == idPedido);
+                pedidoEnCadete.Estado = EstadoPedido.Entregado;
+
+                GuardarListaPedidosEnBD();
+                GuardarListaCadetesEnBD();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private Cadete BuscarPedidoEnCadetes(int idPedido)
+        {
+            foreach (Cadete cadete in Cadeteria.Cadetes)
+            {
+                foreach (Pedido item in cadete.PedidosDelDia)
+                {
+                    if (item.Nro == idPedido)
+                    {
+                        return cadete;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public void DeletePedido(int idPedido)
+        {
+            Cadete cadeteAsignado = BuscarPedidoEnCadetes(idPedido);
+
+            if(cadeteAsignado == null)
+            {
+                if (Cadeteria.Pedidos.RemoveAll(x => x.Nro == idPedido) != 0)
+                {
+                    GuardarListaPedidosEnBD();
+                }
+            }
+            else
+            {
+                Pedido pedidoEnCadete = cadeteAsignado.PedidosDelDia.Find(y => y.Nro == idPedido);
+
+                if (pedidoEnCadete.Estado == EstadoPedido.Pendiente)
+                {
+                    Cadeteria.Pedidos.RemoveAll(x => x.Nro == idPedido);
+                    cadeteAsignado.PedidosDelDia.RemoveAll(x => x.Nro == idPedido);
+
+                    GuardarListaCadetesEnBD();
+                    GuardarListaPedidosEnBD();
+                }
+            }
         }
     }
 }

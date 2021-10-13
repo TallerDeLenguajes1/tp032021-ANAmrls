@@ -62,17 +62,23 @@ namespace TP03_WebApp.Controllers
 
         private void QuitarPedidoDeCadete(int idPedido)
         {
-            Pedido pedido = _DB.Cadeteria.Pedidos.Find(x => x.Nro == idPedido);
-
-            _DB.Cadeteria.Cadetes.ForEach(cadete => cadete.PedidosDelDia.Remove(pedido));
-            
+            _DB.Cadeteria.Cadetes.ForEach(cadete =>
+            {
+                cadete.PedidosDelDia.RemoveAll(y => y.Nro == idPedido);
+            });
         }               
 
         public IActionResult EliminarPedido(int idPedido)
         {
-            if (_DB.Cadeteria.Pedidos.RemoveAll(x => x.Nro == idPedido) != 0)
+            _DB.DeletePedido(idPedido);
+            return View("Index", _DB.Cadeteria);
+        }
+
+        public IActionResult EntregarPedido(int idPedido, string estado)
+        {
+            if (estado == "on")
             {
-                _DB.GuardarListaPedidosEnBD();
+                ViewBag.Entrega = _DB.CambiarEstadoPedido(idPedido);
             }
 
             return View("Index", _DB.Cadeteria);
