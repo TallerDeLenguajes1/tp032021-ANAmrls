@@ -322,8 +322,9 @@ namespace TP03_WebApp.Models
             return null;
         }
 
-        public void DeletePedido(int idPedido)
+        public bool DeletePedido(int idPedido)
         {
+            bool deleted = false;
             Cadete cadeteAsignado = BuscarPedidoEnCadetes(idPedido);
 
             if(cadeteAsignado == null)
@@ -331,6 +332,7 @@ namespace TP03_WebApp.Models
                 if (Cadeteria.Pedidos.RemoveAll(x => x.Nro == idPedido) != 0)
                 {
                     GuardarListaPedidosEnBD();
+                    deleted = true;
                 }
             }
             else
@@ -344,8 +346,12 @@ namespace TP03_WebApp.Models
 
                     GuardarListaCadetesEnBD();
                     GuardarListaPedidosEnBD();
+
+                    deleted = true;
                 }
             }
+
+            return deleted;
         }
     }
 }

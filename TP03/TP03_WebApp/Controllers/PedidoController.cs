@@ -100,7 +100,7 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult EliminarPedido(int idPedido)
         {
-            _DB.DeletePedido(idPedido);
+            ViewBag.Eliminacion = _DB.DeletePedido(idPedido);
             return View("Index", _DB.Cadeteria);
         }
 
