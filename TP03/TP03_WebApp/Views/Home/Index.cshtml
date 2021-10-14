@@ -3,6 +3,37 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-3">"Mi Cadetería"</h1>
+</div>
+<div class="d-flex justify-content-center">
+    <div class="card-deck mt-2 w-75">
+        <div class="card border-dark">
+            <div class="card-header bg-dark">
+                <h3 class="card-title">
+                    <a asp-action="Index" asp-controller="Cadete" class="text-warning text-decoration-none align-middle">Gestionar Cadetes</a>
+                </h3>
+            </div>
+            <div class="card-body border-dark bg-info">
+                <p class="card-text">Aquí puede realizar todas la operaciones referidas a los cadetes (agregar, modifcar, eliminar, etc.)</p>
+                <img src="~/img/man-g3efbda05b_640.png" class="card-img-bottom" alt="Cadete">
+                <div class="figure-caption ">
+                    Image by <a href="https://pixabay.com/users/mohamed_hassan-5229782/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=6051503">mohamed Hassan</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=6051503">Pixabay</a>
+                </div>
+            </div>
+        </div>
+        <div class="card border-dark">
+            <div class="card-header bg-dark">
+                <h3 class="card-title">
+                    <a asp-action="Index" asp-controller="Pedido" class="text-warning text-decoration-none align-middle">Gestionar Pedidos</a>
+                </h3>
+            </div>
+            <div class="card-body border-dark bg-info">
+                <p class="card-text">Aquí puede realizar las operaciones referidas a pedidos (crear, asignar cadetes para el envío, eliminar, etc.)</p>
+                <img src="~/img/businessman-g6f4c88a1c_640.jpg" class="card-img-bottom" alt="Persona cargando pila de paquetes">
+                <div class="figure-caption ">
+                    Image by <a href="https://pixabay.com/users/mediamodifier-1567646/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2108029">Mediamodifier</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=2108029">Pixabay</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
