@@ -151,7 +151,7 @@ namespace TP03_WebApp.Models
             if (i >= 0)
             {
                 Cadeteria.Cadetes[i].Nombre = cadete.Nombre;
-                Cadeteria.Cadetes[i].Apellido = cadete.Apellido;
+                //Cadeteria.Cadetes[i].Apellido = cadete.Apellido;
                 Cadeteria.Cadetes[i].Direccion = cadete.Direccion;
                 Cadeteria.Cadetes[i].Telefono = cadete.Telefono;
                 GuardarListaCadetesEnBD();

@@ -15,7 +15,7 @@ namespace TP03_WebApp.Entidades
         private long telefono;
         private List<Pedido> pedidosDelDia;
         
-        public Cadete(int id, string nombre, string apellido, string direccion, long telefono)
+        public Cadete(int id, string nombre, string direccion, long telefono)
         {
             Id = id;
             Nombre = nombre;

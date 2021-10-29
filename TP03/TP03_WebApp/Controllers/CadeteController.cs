@@ -13,16 +13,18 @@ namespace TP03_WebApp.Controllers
     {           
         private readonly ILogger<CadeteController> _logger;
         private readonly DBTemp _DB;
+        private readonly RepositorioCadete repoCadetes;
         
-        public CadeteController(ILogger<CadeteController> logger, DBTemp DB)
+        public CadeteController(ILogger<CadeteController> logger, DBTemp DB, RepositorioCadete RepoCadetes)
         {
             _logger = logger;
             _DB = DB;
+            repoCadetes = RepoCadetes;
         }               
 
         public IActionResult Index()
         {
-            return View(_DB.Cadeteria.Cadetes);
+            return View(repoCadetes.GetAll());
         }
 
         public IActionResult AltaCadetes()
@@ -37,7 +39,7 @@ namespace TP03_WebApp.Controllers
                 if (long.TryParse(tel, out long telefono))
                 {
                     int id = _DB.GetAutonumericoDeCadete();
-                    Cadete nuevoCadete = new(++id, nombre, apellido, direccion, telefono);
+                    Cadete nuevoCadete = new(++id, nombre, direccion, telefono);
                     _DB.Cadeteria.Cadetes.Add(nuevoCadete);
                     _DB.GuardarCadeteEnBD(nuevoCadete);
                 }
@@ -80,7 +82,7 @@ namespace TP03_WebApp.Controllers
             {
                 if (long.TryParse(tel, out long telefono))
                 {
-                    Cadete cadete = new(id, nombre, apellido, direccion, telefono);
+                    Cadete cadete = new(id, nombre, direccion, telefono);
                     ViewBag.Modificacion = _DB.ModificarCadete(cadete);
                 }
             }
