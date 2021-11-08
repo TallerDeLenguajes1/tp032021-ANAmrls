@@ -74,7 +74,7 @@
                             {
                                 <fieldset disabled>
                                     <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
-                                    <select class="form-select" name="idCadete">
+                                    <select class="custom-select-sm" name="idCadete">
                                         <option selected>Seleccionar</option>
                                         @foreach (var cadete in Model.Cadetes)
                                         {
@@ -94,7 +94,7 @@
                             else
                             {
                                 <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
-                                <select class="form-select" name="idCadete">
+                                <select class="custom-select-sm" name="idCadete">
                                     <option selected>Seleccionar</option>
                                     @foreach (var cadete in Model.Cadetes)
                                     {

@@ -13,7 +13,7 @@ namespace TP03_WebApp.Models
         public Cadeteria Cadeteria { get; set; }
 
         public string RutaArchivoCadetes { get; } = @"ListadoCadetes.Json";
-        public string RutaArchivoPedidos { get; } = @"ListadoPedidos.Json"; 
+        public string RutaArchivoPedidos { get; } = @"ListadoPedidos.Json";
 
         public DBTemp(ILogger logger)
         {
@@ -103,7 +103,7 @@ namespace TP03_WebApp.Models
                 mensaje += " Stack trace: " + ex.StackTrace;
                 _logger.Error(mensaje);
             }
-        }        
+        }
 
         private void GetPedidosDeCadetes()
         {
@@ -167,12 +167,12 @@ namespace TP03_WebApp.Models
         {
             try
             {
-                Cadete cadete = Cadeteria.Cadetes.Find(x => x.Id == idCadete);                               
+                Cadete cadete = Cadeteria.Cadetes.Find(x => x.Id == idCadete);
 
                 foreach (Pedido item in cadete.PedidosDelDia)
                 {
                     if (item.Estado == EstadoPedido.Entregado)
-                    {                        
+                    {
                         Cadeteria.Pedidos.RemoveAll(x => x.Nro == item.Nro);
                     }
                 }
@@ -327,7 +327,7 @@ namespace TP03_WebApp.Models
             bool deleted = false;
             Cadete cadeteAsignado = BuscarPedidoEnCadetes(idPedido);
 
-            if(cadeteAsignado == null)
+            if (cadeteAsignado == null)
             {
                 if (Cadeteria.Pedidos.RemoveAll(x => x.Nro == idPedido) != 0)
                 {

@@ -14,4 +14,10 @@
     <ProjectReference Include="..\EntidadesSistema\EntidadesSistema.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="db\Cadeteria.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

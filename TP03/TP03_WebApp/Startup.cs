@@ -32,7 +32,7 @@ namespace TP03_WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            RepositorioCadete repoCadetes  = new RepositorioCadete(Configuration.GetConnectionString("Default"));
+            RepositorioCadete repoCadetes  = new RepositorioCadete(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger());
             services.AddSingleton(repoCadetes);
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddSingleton(DB);

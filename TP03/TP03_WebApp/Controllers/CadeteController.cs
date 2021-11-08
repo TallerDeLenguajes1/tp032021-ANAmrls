@@ -13,18 +13,18 @@ namespace TP03_WebApp.Controllers
     {           
         private readonly ILogger<CadeteController> _logger;
         private readonly DBTemp _DB;
-        private readonly RepositorioCadete repoCadetes;
+        private readonly ICadeteDB _repoCadetes;
         
-        public CadeteController(ILogger<CadeteController> logger, DBTemp DB, RepositorioCadete RepoCadetes)
+        public CadeteController(ILogger<CadeteController> logger, DBTemp DB, ICadeteDB repoCadetes)
         {
             _logger = logger;
             _DB = DB;
-            repoCadetes = RepoCadetes;
+            _repoCadetes = repoCadetes;
         }               
 
         public IActionResult Index()
         {
-            return View(repoCadetes.GetAll());
+            return View(_repoCadetes.GetAll());
         }
 
         public IActionResult AltaCadetes()
@@ -39,9 +39,9 @@ namespace TP03_WebApp.Controllers
                 if (long.TryParse(tel, out long telefono))
                 {
                     int id = _DB.GetAutonumericoDeCadete();
-                    Cadete nuevoCadete = new(++id, nombre, direccion, telefono);
+                    Cadete nuevoCadete = new(++id, nombre, apellido, direccion, telefono);
                     _DB.Cadeteria.Cadetes.Add(nuevoCadete);
-                    _DB.GuardarCadeteEnBD(nuevoCadete);
+                    _repoCadetes.GuardarCadeteEnBD(nuevoCadete);
                 }
             }
             catch (Exception ex)
@@ -82,7 +82,7 @@ namespace TP03_WebApp.Controllers
             {
                 if (long.TryParse(tel, out long telefono))
                 {
-                    Cadete cadete = new(id, nombre, direccion, telefono);
+                    Cadete cadete = new(id, nombre,apellido, direccion, telefono);
                     ViewBag.Modificacion = _DB.ModificarCadete(cadete);
                 }
             }
