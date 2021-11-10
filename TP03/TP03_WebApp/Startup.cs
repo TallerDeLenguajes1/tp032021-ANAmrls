@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
+using TP03_WebApp.Models.DB;
 using NLog.Web;
 
 namespace TP03_WebApp
@@ -31,11 +32,11 @@ namespace TP03_WebApp
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            RepositorioCadete repoCadetes  = new RepositorioCadete(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger());
-            services.AddSingleton(repoCadetes);
+        {            
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddSingleton(DB);
+            services.AddSingleton<ICadeteDB>(new RepositorioCadete(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
+            //services.AddSingleton(new RepositorioCadete(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

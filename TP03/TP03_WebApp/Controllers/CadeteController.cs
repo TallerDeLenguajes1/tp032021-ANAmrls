@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
+using TP03_WebApp.Models.DB;
 
 namespace TP03_WebApp.Controllers
 {
@@ -39,8 +40,7 @@ namespace TP03_WebApp.Controllers
                 if (long.TryParse(tel, out long telefono))
                 {
                     int id = _DB.GetAutonumericoDeCadete();
-                    Cadete nuevoCadete = new(++id, nombre, apellido, direccion, telefono);
-                    _DB.Cadeteria.Cadetes.Add(nuevoCadete);
+                    Cadete nuevoCadete = new(++id, nombre, apellido, direccion, telefono);                    
                     _repoCadetes.GuardarCadeteEnBD(nuevoCadete);
                 }
             }
@@ -57,18 +57,26 @@ namespace TP03_WebApp.Controllers
                 _logger.LogError(mensaje);
             }
 
-            return View("Index", _DB.Cadeteria.Cadetes);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult EliminacionCheck(int idCadete)
         {
-            return BuscarCadeteEnLista(idCadete);
+            try
+            {
+                Cadete cadeteAEliminar = _repoCadetes.GetCadeteByID(idCadete);
+                return View(cadeteAEliminar);
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }        
 
         public IActionResult EliminarCadete(int idCadete)
         {
-            ViewBag.Eliminacion = _DB.DeleteCadete(idCadete);
-            return View("Index", _DB.Cadeteria.Cadetes);
+            ViewBag.Eliminacion = _repoCadetes.DeleteCadete(idCadete);
+            return View("Index", _repoCadetes.GetAll());
         }
 
         public IActionResult ModificarCadeteForm(int idCadete)
