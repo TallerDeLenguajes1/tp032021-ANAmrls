@@ -125,7 +125,9 @@ namespace TP03_WebApp.Models.DB
                             cadeteBuscado.Id = Convert.ToInt32(dataReader["cadeteID"]);
                             cadeteBuscado.Nombre = dataReader["cadeteNombre"].ToString();
                             cadeteBuscado.Apellido = dataReader["cadeteApellido"].ToString();
+                            cadeteBuscado.Direccion = dataReader["cadeteDireccion"].ToString();
                             cadeteBuscado.Telefono = Convert.ToInt64(dataReader["cadeteTelefono"]);
+                            cadeteBuscado.PedidosDelDia = GetPedidosDeCadete(cadeteBuscado.Id);
                         }
                         connection.Close();
                     }
@@ -182,7 +184,45 @@ namespace TP03_WebApp.Models.DB
 
         public void PagarACadete(int idCadete)
         {
-            throw new NotImplementedException();
+            Cadete cadete = GetCadeteByID(idCadete);
+            IEnumerable<int> pedidosAPagar = cadete.PedidosDelDia.Where(x => x.Estado == EstadoPedido.Entregado).Select(x => x.Nro);
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SQLiteTransaction transaction = connection.BeginTransaction())
+                    {
+                        using (SQLiteCommand command = new SQLiteCommand(connection))
+                        {
+                            command.CommandText = "UPDATE Pedidos " +
+                                                    "SET pedidoEstado = 'Pagado' " +
+                                                    "WHERE pedidoID = @pedidoID;";
+
+                            SQLiteParameter parameter = command.CreateParameter();
+                            parameter.ParameterName = "@pedidoID";
+                            command.Parameters.Add(parameter);
+                                                        
+                            foreach (int item in pedidosAPagar)
+                            {
+                                parameter.Value = item;
+                                command.ExecuteNonQuery();
+                            }
+
+                            transaction.Commit();
+                            connection.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
         }
 
         public bool DeleteCadete(int id)
@@ -236,7 +276,8 @@ namespace TP03_WebApp.Models.DB
                                                 "INNER JOIN Pedidos USING(cadeteID) " +
                                                 "INNER JOIN Clientes USING(clienteID) " +
                                       "WHERE cadeteActivo = 1 " +
-                                                "AND cadeteID = @cadeteID;";
+                                                "AND cadeteID = @cadeteID " +
+                                                "AND pedidoEstado <> 'Pagado';";
 
                     using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
                     {

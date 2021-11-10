@@ -108,30 +108,16 @@ namespace TP03_WebApp.Controllers
 
             return View("Index", _repoCadetes.GetAll());
         }
-        
-        private IActionResult BuscarCadeteEnLista(int idCadete)
-        {
-            Cadete cadete = _DB.Cadeteria.Cadetes.Find(x => x.Id == idCadete);
-
-            if (cadete != null)
-            {
-                return View(cadete);
-            }
-            else
-            {
-                return View("Index", _DB.Cadeteria.Cadetes);
-            }
-        }
 
         public IActionResult PagarJornalCheck(int idCadete)
         {
-            return BuscarCadeteEnLista(idCadete);
+            return View(_repoCadetes.GetCadeteByID(idCadete));
         }
 
         public IActionResult PagarJornal(int idCadete)
         {
-            _DB.PagarACadete(idCadete);
-            return View("Index", _DB.Cadeteria.Cadetes);
+            _repoCadetes.PagarACadete(idCadete);
+            return View("Index", _repoCadetes.GetAll());
         }
     }
 }

@@ -9,7 +9,8 @@ namespace TP03_WebApp.Entidades
     public enum EstadoPedido
     {
         Pendiente,
-        Entregado
+        Entregado,
+        Pagado
     }
     public class Pedido
     {
