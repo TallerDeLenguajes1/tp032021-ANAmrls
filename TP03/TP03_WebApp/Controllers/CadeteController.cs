@@ -64,8 +64,7 @@ namespace TP03_WebApp.Controllers
         {
             try
             {
-                Cadete cadeteAEliminar = _repoCadetes.GetCadeteByID(idCadete);
-                return View(cadeteAEliminar);
+                return View(_repoCadetes.GetCadeteByID(idCadete));
             }
             catch
             {
@@ -81,7 +80,7 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult ModificarCadeteForm(int idCadete)
         {
-            return BuscarCadeteEnLista(idCadete);
+            return View(_repoCadetes.GetCadeteByID(idCadete));
         }
 
         public IActionResult ModificarCadete(string nombre, string apellido, string direccion, string tel, int id)
@@ -91,7 +90,7 @@ namespace TP03_WebApp.Controllers
                 if (long.TryParse(tel, out long telefono))
                 {
                     Cadete cadete = new(id, nombre,apellido, direccion, telefono);
-                    ViewBag.Modificacion = _DB.ModificarCadete(cadete);
+                    ViewBag.Modificacion = _repoCadetes.ModificarCadete(cadete);
                 }
             }
             catch (Exception ex)
@@ -107,7 +106,7 @@ namespace TP03_WebApp.Controllers
                 _logger.LogError(mensaje);
             }
 
-            return View("Index", _DB.Cadeteria.Cadetes);
+            return View("Index", _repoCadetes.GetAll());
         }
         
         private IActionResult BuscarCadeteEnLista(int idCadete)

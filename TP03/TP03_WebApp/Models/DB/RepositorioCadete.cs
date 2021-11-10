@@ -143,7 +143,41 @@ namespace TP03_WebApp.Models.DB
 
         public bool ModificarCadete(Cadete cadete)
         {
-            throw new NotImplementedException();
+            bool modificacionRealizada = false;
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "UPDATE Cadetes " +
+                                        "SET cadeteNombre = @nombre, " +
+                                            "cadeteApellido = @apellido, " +
+                                            "cadeteDireccion = @direccion, " +
+                                            "cadeteTelefono = @telefono " +
+                                        "WHERE cadeteID = @id;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@nombre", cadete.Nombre);
+                        command.Parameters.AddWithValue("@apellido", cadete.Apellido);
+                        command.Parameters.AddWithValue("@direccion", cadete.Direccion);
+                        command.Parameters.AddWithValue("@telefono", cadete.Telefono);
+                        command.Parameters.AddWithValue("@id", cadete.Id);
+
+                        connection.Open();
+                        modificacionRealizada = command.ExecuteNonQuery() > 0;
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+
+            return modificacionRealizada;
         }
 
         public void PagarACadete(int idCadete)
