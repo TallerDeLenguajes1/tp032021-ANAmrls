@@ -276,6 +276,7 @@ namespace TP03_WebApp.Models.DB
                                                 "INNER JOIN Pedidos USING(cadeteID) " +
                                                 "INNER JOIN Clientes USING(clienteID) " +
                                       "WHERE cadeteActivo = 1 " +
+                                                "AND clienteActivo = 1 " +
                                                 "AND cadeteID = @cadeteID " +
                                                 "AND pedidoEstado <> 'Pagado';";
 
@@ -288,17 +289,9 @@ namespace TP03_WebApp.Models.DB
                         {
                             while (dataReader.Read())
                             {
-                                Cliente cliente = new Cliente();
-                                cliente.Id = Convert.ToInt32(dataReader["clienteID"]);
-                                cliente.Nombre = dataReader["clienteNombre"].ToString();
-                                cliente.Apellido = dataReader["clienteApellido"].ToString();
-                                cliente.Direccion = dataReader["clienteDireccion"].ToString();
-                                cliente.Telefono = Convert.ToInt64(dataReader["clienteTelefono"]);
-
                                 Pedido pedido = new Pedido();
                                 pedido.Nro = Convert.ToInt32(dataReader["pedidoID"]);
                                 pedido.Obs = dataReader["pedidoObs"].ToString();
-                                pedido.Cliente = cliente;
 
                                 if (Enum.TryParse(dataReader["pedidoEstado"].ToString(), out EstadoPedido estadoPedido))
                                 {
@@ -308,6 +301,15 @@ namespace TP03_WebApp.Models.DB
                                 {
                                     pedido.Estado = EstadoPedido.Pendiente;
                                 }
+
+                                pedido.Cliente = new Cliente
+                                {
+                                    Id = Convert.ToInt32(dataReader["clienteID"]),
+                                    Nombre = dataReader["clienteNombre"].ToString(),
+                                    Apellido = dataReader["clienteApellido"].ToString(),
+                                    Direccion = dataReader["clienteDireccion"].ToString(),
+                                    Telefono = Convert.ToInt64(dataReader["clienteTelefono"])
+                                };
 
                                 pedidos.Add(pedido);
                             }

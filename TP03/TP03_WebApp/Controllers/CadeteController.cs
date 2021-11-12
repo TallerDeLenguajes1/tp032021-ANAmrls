@@ -39,8 +39,7 @@ namespace TP03_WebApp.Controllers
             {
                 if (long.TryParse(tel, out long telefono))
                 {
-                    int id = _DB.GetAutonumericoDeCadete();
-                    Cadete nuevoCadete = new(++id, nombre, apellido, direccion, telefono);                    
+                    Cadete nuevoCadete = new(nombre, apellido, direccion, telefono);                    
                     _repoCadetes.GuardarCadeteEnBD(nuevoCadete);
                 }
             }

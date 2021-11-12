@@ -13,10 +13,10 @@ namespace TP03_WebApp.Models.DB
         private readonly ILogger _logger;
         private readonly string connectionString;
 
-        RepositorioCliente(ILogger logger, string connectionString)
+        public RepositorioCliente(string connectionString, ILogger logger)
         {
-            _logger = logger;
             this.connectionString = connectionString;
+            _logger = logger;            
         }
 
         public bool DeleteCliente(int idCliente)
@@ -70,11 +70,11 @@ namespace TP03_WebApp.Models.DB
                             while (dataReader.Read())
                             {
                                 Cliente cliente = new Cliente();
-                                cliente.Id = Convert.ToInt32(dataReader["cadeteID"]);
-                                cliente.Nombre = dataReader["cadeteNombre"].ToString();
-                                cliente.Apellido = dataReader["cadeteApellido"].ToString();
-                                cliente.Direccion = dataReader["cadeteDireccion"].ToString();
-                                cliente.Telefono = Convert.ToInt64(dataReader["cadeteTelefono"]);
+                                cliente.Id = Convert.ToInt32(dataReader["clienteID"]);
+                                cliente.Nombre = dataReader["clienteNombre"].ToString();
+                                cliente.Apellido = dataReader["clienteApellido"].ToString();
+                                cliente.Direccion = dataReader["clienteDireccion"].ToString();
+                                cliente.Telefono = Convert.ToInt64(dataReader["clienteTelefono"]);
                                 clientes.Add(cliente);
                             }
                         }
@@ -92,7 +92,7 @@ namespace TP03_WebApp.Models.DB
             return clientes;
         }
 
-        public void SaveCliente(Cliente cliente)
+        public void CreateCliente(Cliente cliente)
         {
             try
             {
@@ -131,6 +131,39 @@ namespace TP03_WebApp.Models.DB
                 mensaje += " Stack trace: " + ex.StackTrace;
                 _logger.Error(mensaje);
             }
+        }
+
+        public int GetLastClienteID()
+        {
+            int idBuscado = 0;
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "SELECT clienteID FROM Clientes WHERE clienteActivo = 1 ORDER BY clienteID DESC LIMIT 1;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        connection.Open();
+
+                        using (SQLiteDataReader dataReader = command.ExecuteReader())
+                        {
+                            dataReader.Read();
+                            idBuscado = Convert.ToInt32(dataReader["clienteID"]);
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+
+            return idBuscado;
         }
     }
 }

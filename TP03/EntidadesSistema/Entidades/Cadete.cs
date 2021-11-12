@@ -31,6 +31,14 @@ namespace TP03_WebApp.Entidades
 
         }
 
+        public Cadete(string nombre, string apellido, string direccion, long telefono)
+        {
+            this.nombre = nombre;
+            this.apellido = apellido;
+            this.direccion = direccion;
+            this.telefono = telefono;
+        }
+
         public int Id { get => id; set => id = value; }
         public string Nombre { get => nombre; set => nombre = value; }
         public string Direccion { get => direccion; set => direccion = value; }

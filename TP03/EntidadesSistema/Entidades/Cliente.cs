@@ -23,6 +23,14 @@ namespace TP03_WebApp.Entidades
             Telefono = tel;
         }
 
+        public Cliente(string nombre, string apellido, string direccion, long tel)
+        {
+            Nombre = nombre;
+            Apellido = apellido;
+            Direccion = direccion;
+            Telefono = tel;
+        }
+
         [JsonConstructor]
         public Cliente()
         {

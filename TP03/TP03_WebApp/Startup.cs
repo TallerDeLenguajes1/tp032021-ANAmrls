@@ -36,7 +36,9 @@ namespace TP03_WebApp
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddSingleton(DB);
             services.AddSingleton<ICadeteDB>(new RepositorioCadete(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
-            //services.AddSingleton(new RepositorioCadete(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
+            services.AddSingleton<IClienteDB>(new RepositorioCliente(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
+            services.AddSingleton<IPedidoDB>(new RepositorioPedido(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
+            services.AddSingleton(new RepositorioUsuario(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

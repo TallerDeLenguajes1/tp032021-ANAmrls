@@ -6,23 +6,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
+using TP03_WebApp.Models.DB;
+using TP03_WebApp.ViewModels;
 
 namespace TP03_WebApp.Controllers
 {
     public class PedidoController : Controller
     {        
         private readonly ILogger<PedidoController> _logger;
-        private readonly DBTemp _DB;
+        private readonly IPedidoDB _repoPedidos;
+        private readonly ICadeteDB _repoCadetes;
+        private readonly IClienteDB _repoClientes;
 
-        public PedidoController(ILogger<PedidoController> logger, DBTemp dB)
+        public PedidoController(ILogger<PedidoController> logger, IPedidoDB repoPedidos, ICadeteDB repoCadetes, IClienteDB repoClientes)
         {
             _logger = logger;
-            _DB = dB;
+            _repoPedidos = repoPedidos;
+            _repoCadetes = repoCadetes;
+            _repoClientes = repoClientes;
         }
 
         public IActionResult Index()
-        {
-            return View(_DB.Cadeteria);
+        {            
+            PedidoIndexViewModel pedidoIndexViewModel = new(_repoPedidos.GetAll(), _repoCadetes.GetAll());
+            return View(pedidoIndexViewModel);
         }
 
         public IActionResult RealizarPedido()
@@ -30,17 +37,19 @@ namespace TP03_WebApp.Controllers
             return View();
         }
 
-        public IActionResult CrearPedido(string obs, int idCliente, string nombre, string apellido,
+        public IActionResult CrearPedido(string obs, string nombre, string apellido,
                                          string direccion, string tel)
         {
             try
             {
                 if (long.TryParse(tel, out long telefono))
                 {
-                    int nro = _DB.GetAutonumericoDePedido();
-                    Pedido nuevoPedido = new(++nro, obs, idCliente, nombre, apellido, direccion, telefono);
-                    _DB.Cadeteria.Pedidos.Add(nuevoPedido);
-                    _DB.GuardarPedidoEnBD(nuevoPedido);
+                    Cliente nuevoCliente = new(nombre, apellido, direccion, telefono);
+                    _repoClientes.CreateCliente(nuevoCliente);
+                    nuevoCliente.Id = _repoClientes.GetLastClienteID();
+                    Pedido nuevoPedido = new(obs);
+                    nuevoPedido.Cliente = nuevoCliente;
+                    _repoPedidos.GuardarPedidoEnBD(nuevoPedido);
                 }
             }
             catch (Exception ex)
@@ -56,62 +65,39 @@ namespace TP03_WebApp.Controllers
                 _logger.LogError(mensaje);
             }
 
-            return View("Index", _DB.Cadeteria);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult AsignarPedidoACadete(int idPedido, int idCadete)
         {
-            try
-            {
-                QuitarPedidoDeCadete(idPedido);
+            _repoPedidos.AsignarCadete(idPedido, idCadete);
 
-                if (idCadete != 0)
-                {
-                    Cadete cadete = _DB.Cadeteria.Cadetes.Where(a => a.Id == idCadete).First();
-                    Pedido pedido = _DB.Cadeteria.Pedidos.Where(b => b.Nro == idPedido).First();
-                    cadete.PedidosDelDia.Add(pedido);
-                }
-
-                _DB.GuardarListaCadetesEnBD();
-            }
-            catch (Exception ex)
-            {
-                var mensaje = "Error message: " + ex.Message;
-
-                if (ex.InnerException != null)
-                {
-                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
-                }
-
-                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
-                _logger.LogError(mensaje);
-            }
-
-            return View("Index", _DB.Cadeteria);
+            return RedirectToAction(nameof(Index));
         }
 
-        private void QuitarPedidoDeCadete(int idPedido)
-        {
-            _DB.Cadeteria.Cadetes.ForEach(cadete =>
-            {
-                cadete.PedidosDelDia.RemoveAll(y => y.Nro == idPedido);
-            });
-        }               
+        //private void QuitarPedidoDeCadete(int idPedido)
+        //{
+        //    _DB.Cadeteria.Cadetes.ForEach(cadete =>
+        //    {
+        //        cadete.PedidosDelDia.RemoveAll(y => y.Nro == idPedido);
+        //    });
+        //}
 
         public IActionResult EliminarPedido(int idPedido)
         {
-            ViewBag.Eliminacion = _DB.DeletePedido(idPedido);
-            return View("Index", _DB.Cadeteria);
+            ViewBag.Eliminacion = _repoPedidos.DeletePedido(idPedido);
+            //TODO agregar lo de viewbag al view model
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult EntregarPedido(int idPedido, string estado)
         {
             if (estado == "on")
             {
-                ViewBag.Entrega = _DB.CambiarEstadoPedido(idPedido);
+                ViewBag.Entrega = _repoPedidos.CambiarEstadoPedido(idPedido);
             }
 
-            return View("Index", _DB.Cadeteria);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

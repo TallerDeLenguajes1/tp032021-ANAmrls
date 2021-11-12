@@ -28,6 +28,13 @@ namespace TP03_WebApp.Entidades
             Estado = EstadoPedido.Pendiente;
         }
 
+        public Pedido(string obs)
+        {
+            Cliente = new Cliente();
+            Obs = obs;
+            Estado = EstadoPedido.Pendiente;
+        }               
+
         [JsonConstructor]
         public Pedido()
         {
