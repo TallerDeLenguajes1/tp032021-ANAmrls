@@ -39,6 +39,13 @@ namespace TP03_WebApp
             services.AddSingleton<IClienteDB>(new RepositorioCliente(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
             services.AddSingleton<IPedidoDB>(new RepositorioPedido(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
             services.AddSingleton(new RepositorioUsuario(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+                {
+                    options.IdleTimeout = TimeSpan.FromSeconds(3600);
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +65,8 @@ namespace TP03_WebApp
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthorization();
 

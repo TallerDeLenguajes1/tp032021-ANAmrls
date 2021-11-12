@@ -7,23 +7,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Session;
 
 namespace TP03_WebApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly DBTemp _DB;
 
-        public HomeController(ILogger<HomeController> logger, DBTemp DB)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _DB = DB;
         }
 
         public IActionResult Index()
-        {
-            return View();
+        {            
+            if (HttpContext.Session.GetInt32("ID") != null)
+            {
+                return View();
+            } 
+            else 
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            
         }
 
         public IActionResult Privacy()

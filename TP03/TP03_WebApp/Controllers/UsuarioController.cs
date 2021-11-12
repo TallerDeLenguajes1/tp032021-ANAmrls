@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
 using TP03_WebApp.Models.DB;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Session;
 
 namespace TP03_WebApp.Controllers
 {
@@ -24,17 +26,23 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult Index()
         {
+           
             return View();
         }
                                         
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogIn(string username, string password)
-        {
+        {            
             try
             {
-                if (_repoUsuario.GetUsuarioID(username, password) != 0)
+                int usuarioID = _repoUsuario.GetUsuarioID(username, password);
+                int usuarioNivel =  _repoUsuario.GetUsuarioNivel(usuarioID);
+
+                if (usuarioID != 0)
                 {
+                    HttpContext.Session.SetInt32("ID", usuarioID);
+                    HttpContext.Session.SetInt32("nivel", usuarioNivel);
                     return RedirectToAction("Index", "Home");
                 } 
                 else

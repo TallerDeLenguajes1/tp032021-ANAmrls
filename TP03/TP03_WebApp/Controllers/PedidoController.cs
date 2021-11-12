@@ -8,6 +8,8 @@ using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
 using TP03_WebApp.Models.DB;
 using TP03_WebApp.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Session;
 
 namespace TP03_WebApp.Controllers
 {
@@ -27,9 +29,16 @@ namespace TP03_WebApp.Controllers
         }
 
         public IActionResult Index()
-        {            
-            PedidoIndexViewModel pedidoIndexViewModel = new(_repoPedidos.GetAll(), _repoCadetes.GetAll());
-            return View(pedidoIndexViewModel);
+        {
+            if (HttpContext.Session.GetInt32("ID") != null)
+            {
+                PedidoIndexViewModel pedidoIndexViewModel = new(_repoPedidos.GetAll(), _repoCadetes.GetAll());
+                return View(pedidoIndexViewModel);                
+            } 
+            else 
+            {
+                return RedirectToAction("Index", "Usuario");
+            }            
         }
 
         public IActionResult RealizarPedido()

@@ -60,14 +60,12 @@ namespace TP03_WebApp.Models.DB
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    string sqlQuery = "SELECT usuarioID FROM Usuarios " +
-                                        "WHERE usuarioNombre = @usuarioNombre " +
-                                        "AND usuarioPassword = @usuarioPass;";
+                    string sqlQuery = "SELECT usuarioID FROM Usuarios WHERE usuarioNombre = @usuarioNombre AND usuarioPassword = @usuarioPassword;";
 
                     using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
                     {
                         command.Parameters.AddWithValue("@usuarioNombre", nombre);
-                        command.Parameters.AddWithValue("@suarioPass", pass);
+                        command.Parameters.AddWithValue("@usuarioPassword", pass);
                         connection.Open();
 
                         using (SQLiteDataReader dataReader = command.ExecuteReader())
@@ -87,6 +85,40 @@ namespace TP03_WebApp.Models.DB
             }
 
             return usuarioID;
+        }
+
+        public int GetUsuarioNivel (int idUsuario)
+        {
+            int usuarioNivel = 0;
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "SELECT usuarioNivel FROM Usuarios WHERE usuarioID = @usuarioID;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@usuarioID", idUsuario);
+                        connection.Open();
+
+                        using (SQLiteDataReader dataReader = command.ExecuteReader())
+                        {
+                            dataReader.Read();
+                            usuarioNivel = Convert.ToInt32(dataReader["usuarioNivel"]);
+                            connection.Close();
+                        }                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+
+            return usuarioNivel;
         }
     }
 }

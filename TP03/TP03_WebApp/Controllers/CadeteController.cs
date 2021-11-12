@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
 using TP03_WebApp.Models.DB;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Session;
 
 namespace TP03_WebApp.Controllers
 {
@@ -24,8 +26,23 @@ namespace TP03_WebApp.Controllers
         }               
 
         public IActionResult Index()
-        {
-            return View(_repoCadetes.GetAll());
+        {            
+            if (HttpContext.Session.GetInt32("ID") != null)
+            {
+                if (HttpContext.Session.GetInt32("nivel") == 3)
+                {
+                    return View(_repoCadetes.GetAll());
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }                
+            } 
+            else 
+            {
+                return RedirectToAction("Index", "Usuario");
+            }
+            
         }
 
         public IActionResult AltaCadetes()
