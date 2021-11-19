@@ -9,14 +9,16 @@ namespace TP03_WebApp
         public PerfilDeMapeo()
         {
             //Maps para cadetes
+            CreateMap<Cadete, CadeteViewModel>().ReverseMap();
             CreateMap<Cadete, CadeteIndexViewModel>().ReverseMap();
             CreateMap<Cadete, CadeteAltaViewModel>().ReverseMap();
             CreateMap<Cadete, CadeteModificarViewModel>().ReverseMap();
 
             //Maps para pedidos
-            CreateMap<Pedido, PedidoIndexViewModel>().ReverseMap();
+            CreateMap<Pedido, PedidoViewModel>().ReverseMap();
 
             //Maps para clientes
+            CreateMap<Cliente, ClienteViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteIndexViewModel>().ReverseMap();
         }
     }

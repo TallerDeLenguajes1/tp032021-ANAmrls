@@ -8,15 +8,14 @@ namespace TP03_WebApp.Models.ViewModels
 {
     public class PedidoIndexViewModel
     {
-        public int Nro { get; set; }
-        public string Obs { get; set; }
-        public Cliente Cliente { get; set; }
-        public EstadoPedido Estado { get; set; }
-        public List<CadeteIndexViewModel> Cadetes { get; set; }
+              
+        public List<PedidoViewModel> Pedidos { get; set; }
+        public List<CadeteViewModel> Cadetes { get; set; }
 
-        public PedidoIndexViewModel()
+        public PedidoIndexViewModel(List<PedidoViewModel> Pedidos, List<CadeteViewModel> Cadetes)
         {
-
+            this.Pedidos = Pedidos;
+            this.Cadetes = Cadetes;
         }
     }
 }

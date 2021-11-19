@@ -39,12 +39,11 @@ namespace TP03_WebApp.Controllers
         public IActionResult Index()
         {
             if (HttpContext.Session.GetInt32("ID") != null)
-            {
-                var cadetesVM = _mapper.Map<List<CadeteIndexViewModel>>(_repoCadetes.GetAll());
-                var pedidosVM = _mapper.Map<List<PedidoIndexViewModel>>(_repoPedidos.GetAll());
-                pedidosVM.C
-                PedidoIndexViewModel pedidoIndexViewModel = new(_repoPedidos.GetAll(), _repoCadetes.GetAll());
-                return View(pedidoIndexViewModel);                
+            {                
+                var cadetesVM = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
+                var pedidosVM = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll());                
+                var pedidoIndexVM = new PedidoIndexViewModel(pedidosVM, cadetesVM);           
+                return View(pedidoIndexVM);                
             } 
             else 
             {

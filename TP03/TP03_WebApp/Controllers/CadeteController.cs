@@ -39,8 +39,9 @@ namespace TP03_WebApp.Controllers
             {
                 if (HttpContext.Session.GetInt32("nivel") == 3)
                 {
-                    var cadetesVM = _mapper.Map<List<CadeteIndexViewModel>>(_repoCadetes.GetAll());
-                    return View(cadetesVM);
+                    //var cadetesVM = _mapper.Map<List<CadeteIndexViewModel>>(_repoCadetes.GetAll());
+                    
+                    return View(_repoCadetes.GetAll());
                 }
                 else
                 {
