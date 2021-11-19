@@ -34,3 +34,7 @@
         <button type="submit" class="btn btn-primary">Confirmar Cambios</button>
     </div>
 </form>
+
+@section scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

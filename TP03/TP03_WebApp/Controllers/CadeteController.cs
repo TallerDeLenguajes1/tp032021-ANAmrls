@@ -9,6 +9,8 @@ using TP03_WebApp.Models;
 using TP03_WebApp.Models.DB;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
+using AutoMapper;
+using TP03_WebApp.Models.ViewModels;
 
 namespace TP03_WebApp.Controllers
 {
@@ -17,12 +19,18 @@ namespace TP03_WebApp.Controllers
         private readonly ILogger<CadeteController> _logger;
         private readonly DBTemp _DB;
         private readonly ICadeteDB _repoCadetes;
-        
-        public CadeteController(ILogger<CadeteController> logger, DBTemp DB, ICadeteDB repoCadetes)
+        private readonly IMapper _mapper;
+
+        public CadeteController(
+            ILogger<CadeteController> logger,
+            DBTemp DB,
+            ICadeteDB repoCadetes,
+            IMapper mapper)
         {
             _logger = logger;
             _DB = DB;
             _repoCadetes = repoCadetes;
+            _mapper = mapper;
         }               
 
         public IActionResult Index()
@@ -31,7 +39,8 @@ namespace TP03_WebApp.Controllers
             {
                 if (HttpContext.Session.GetInt32("nivel") == 3)
                 {
-                    return View(_repoCadetes.GetAll());
+                    var cadetesVM = _mapper.Map<List<CadeteIndexViewModel>>(_repoCadetes.GetAll());
+                    return View(cadetesVM);
                 }
                 else
                 {

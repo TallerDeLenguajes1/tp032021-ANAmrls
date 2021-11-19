@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using TP03_WebApp.Entidades;
 using TP03_WebApp.Models;
 using TP03_WebApp.Models.DB;
-using TP03_WebApp.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
+using TP03_WebApp.Models.ViewModels;
+using AutoMapper;
 
 namespace TP03_WebApp.Controllers
 {
@@ -19,19 +20,29 @@ namespace TP03_WebApp.Controllers
         private readonly IPedidoDB _repoPedidos;
         private readonly ICadeteDB _repoCadetes;
         private readonly IClienteDB _repoClientes;
+        private readonly IMapper _mapper;
 
-        public PedidoController(ILogger<PedidoController> logger, IPedidoDB repoPedidos, ICadeteDB repoCadetes, IClienteDB repoClientes)
+        public PedidoController(
+            ILogger<PedidoController> logger,
+            IPedidoDB repoPedidos,
+            ICadeteDB repoCadetes,
+            IClienteDB repoClientes,
+            IMapper mapper)
         {
             _logger = logger;
             _repoPedidos = repoPedidos;
             _repoCadetes = repoCadetes;
             _repoClientes = repoClientes;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
         {
             if (HttpContext.Session.GetInt32("ID") != null)
             {
+                var cadetesVM = _mapper.Map<List<CadeteIndexViewModel>>(_repoCadetes.GetAll());
+                var pedidosVM = _mapper.Map<List<PedidoIndexViewModel>>(_repoPedidos.GetAll());
+                pedidosVM.C
                 PedidoIndexViewModel pedidoIndexViewModel = new(_repoPedidos.GetAll(), _repoCadetes.GetAll());
                 return View(pedidoIndexViewModel);                
             } 

@@ -46,6 +46,7 @@ namespace TP03_WebApp
                     options.Cookie.HttpOnly = true;
                     options.Cookie.IsEssential = true;
                 });
+            services.AddAutoMapper(typeof(PerfilDeMapeo));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
