@@ -39,9 +39,12 @@ namespace TP03_WebApp.Controllers
             {
                 if (HttpContext.Session.GetInt32("nivel") == 3)
                 {
-                    //var cadetesVM = _mapper.Map<List<CadeteIndexViewModel>>(_repoCadetes.GetAll());
-                    
-                    return View(_repoCadetes.GetAll());
+                    var cadetesVM = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
+                    CadeteIndexViewModel indexViewModel = new()
+                    {
+                        Cadetes = cadetesVM
+                    };
+                    return View(indexViewModel);
                 }
                 else
                 {
@@ -55,19 +58,26 @@ namespace TP03_WebApp.Controllers
             
         }
 
-        public IActionResult AltaCadetes()
+        [HttpGet]
+        public IActionResult AltaCadete()
         {
-            return View();
+            return View(new CadeteAltaViewModel());
         }
 
-        public IActionResult DarAltaCadete(string nombre, string apellido, string direccion, string tel)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AltaCadete(CadeteAltaViewModel cadete)
         {
             try
             {
-                if (long.TryParse(tel, out long telefono))
+                if (ModelState.IsValid)
                 {
-                    Cadete nuevoCadete = new(nombre, apellido, direccion, telefono);                    
+                    Cadete nuevoCadete = _mapper.Map<Cadete>(cadete);
                     _repoCadetes.GuardarCadeteEnBD(nuevoCadete);
+                }
+                else
+                {
+                    return View(cadete);
                 }
             }
             catch (Exception ex)
@@ -86,11 +96,12 @@ namespace TP03_WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult EliminacionCheck(int idCadete)
+        public IActionResult ConfirmarEliminacion(int idCadete)
         {
             try
             {
-                return View(_repoCadetes.GetCadeteByID(idCadete));
+                var cadeteAEliminar = _mapper.Map<CadeteEliminarViewModel>(_repoCadetes.GetCadeteByID(idCadete));
+                return View(cadeteAEliminar);
             }
             catch
             {
@@ -98,25 +109,42 @@ namespace TP03_WebApp.Controllers
             }
         }        
 
+        [HttpPost]
         public IActionResult EliminarCadete(int idCadete)
         {
-            ViewBag.Eliminacion = _repoCadetes.DeleteCadete(idCadete);
-            return View("Index", _repoCadetes.GetAll());
+            CadeteIndexViewModel indexViewModel = new()
+            {
+                ConfirmacionDeEliminacion = _repoCadetes.DeleteCadete(idCadete)
+            };
+            indexViewModel.Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());            
+            return View("Index", indexViewModel);
         }
 
-        public IActionResult ModificarCadeteForm(int idCadete)
+        [HttpGet]
+        public IActionResult ModificarCadete(int idCadete)
         {
-            return View(_repoCadetes.GetCadeteByID(idCadete));
+            var cadeteVM = _mapper.Map<CadeteModificarViewModel>(_repoCadetes.GetCadeteByID(idCadete));
+            return View(cadeteVM);
         }
 
-        public IActionResult ModificarCadete(string nombre, string apellido, string direccion, string tel, int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ModificarCadete(CadeteModificarViewModel cadete)
         {
             try
             {
-                if (long.TryParse(tel, out long telefono))
+                if (ModelState.IsValid)
                 {
-                    Cadete cadete = new(id, nombre,apellido, direccion, telefono);
-                    ViewBag.Modificacion = _repoCadetes.ModificarCadete(cadete);
+                    Cadete cadeteModificado = _mapper.Map<Cadete>(cadete);
+
+                    CadeteIndexViewModel indexViewModel = new()
+                    {
+                        ConfirmacionDeModificacion = _repoCadetes.ModificarCadete(cadeteModificado)
+                    };
+
+                    indexViewModel.Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
+
+                    return View("Index", indexViewModel);
                 }
             }
             catch (Exception ex)
@@ -132,18 +160,36 @@ namespace TP03_WebApp.Controllers
                 _logger.LogError(mensaje);
             }
 
-            return View("Index", _repoCadetes.GetAll());
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult PagarJornalCheck(int idCadete)
         {
-            return View(_repoCadetes.GetCadeteByID(idCadete));
+            try
+            {
+                var cadeteAPagar = _mapper.Map<CadetePagarViewModel>(_repoCadetes.GetCadeteByID(idCadete));
+                return View(cadeteAPagar);
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public IActionResult PagarJornal(int idCadete)
         {
-            _repoCadetes.PagarACadete(idCadete);
-            return View("Index", _repoCadetes.GetAll());
+            try
+            {
+                _repoCadetes.PagarACadete(idCadete);
+            }
+            catch
+            {
+                
+            }
+
+            return RedirectToAction(nameof(Index));
         }
+
+        //TODO try catches 
     }
 }

@@ -1,0 +1,41 @@
+﻿@model TP03_WebApp.Models.ViewModels.CadeteAltaViewModel
+@{
+    ViewData["Title"] = "Alta Cadetes";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Alta Cadetes</h1>
+</div>
+<form class="row g-3" asp-action="AltaCadete" asp-controller="Cadete" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-6 mt-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control"/>
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 mt-3">
+        <label asp-for="Apellido" class="form-label"></label>
+        <input asp-for="Apellido" class="form-control"/>
+        <span asp-validation-for="Apellido" class="text-danger"></span>
+    </div>
+    <div class="col-12  mt-3">
+        <label asp-for="Direccion" class="form-label"></label>
+        <input asp-for="Direccion" class="form-control"/>
+        <span asp-validation-for="Direccion" class="text-danger"></span>
+    </div>
+    <div class="col-md-6  mt-3">
+        <label asp-for="Telefono" class="form-label"></label>
+        <input asp-for="Telefono" class="form-control" placeholder="Ej: 3815123123"/>
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+    <div class="col-12 mt-3">
+        <input type="submit" class="btn btn-primary" value="Guardar"/>
+    </div>
+    <div class="col-md-6 mt-3">
+        <a class="btn btn-secondary" asp-controller="Cadete" asp-action="Index">Volver a la lista</a>
+    </div>
+</form>
+
+@section scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

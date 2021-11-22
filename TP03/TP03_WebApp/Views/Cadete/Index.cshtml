@@ -1,13 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Listado de Cadetes";
 }
-@model List<TP03_WebApp.Models.ViewModels.CadeteIndexViewModel>
+@model TP03_WebApp.Models.ViewModels.CadeteIndexViewModel
 
 <div class="text-center">
     <h1 class="display-3 mb-3 text-primary">Listado de Cadetes</h1>
-    @if (ViewBag.Eliminacion != null)
+    @if (Model.ConfirmacionDeEliminacion != null)
     {
-        if (ViewBag.Eliminacion)
+        if (Model.ConfirmacionDeEliminacion == true)
         {
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Cadete eliminado con éxito!
@@ -31,9 +31,9 @@
         }
     }
 
-    @if (ViewBag.Modificacion != null)
+    @if (Model.ConfirmacionDeModificacion != null)
     {
-        if (ViewBag.Modificacion)
+        if (Model.ConfirmacionDeModificacion == true)
         {
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Cadete modificado con éxito!
@@ -72,7 +72,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Cadetes)
             {
             <tr>
                 <th class="align-middle" scope="row">@item.Id</th>
@@ -95,7 +95,7 @@
                     </form>
                 </td>
                 <td class="align-middle">
-                    <form asp-action="ModificarCadeteForm" asp-controller="Cadete" method="post">
+                    <form asp-action="ModificarCadete" asp-controller="Cadete" method="get">
                         <input type="hidden" id="idCadete" name="idCadete" value="@item.Id">
                         <button type="submit" class="btn btn-warning">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -106,7 +106,7 @@
                     </form>
                 </td>
                 <td class="align-middle">
-                    <form asp-action="EliminacionCheck" asp-controller="Cadete" method="post">
+                    <form asp-action="ConfirmarEliminacion" asp-controller="Cadete" method="post">
                         <input type="hidden" id="idCadete" name="idCadete" value="@item.Id">
                         <button type="submit" class="btn btn-danger">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-trash-fill" viewBox="0 0 18 18">
@@ -120,6 +120,6 @@
         </tbody>
     </table>
     <div class="btn">
-        <a class="btn btn-primary" asp-area="" asp-controller="Cadete" asp-action="AltaCadetes">Nuevo Cadete</a>
+        <a class="btn btn-primary" asp-area="" asp-controller="Cadete" asp-action="AltaCadete">Nuevo Cadete</a>
     </div>
 </div>
