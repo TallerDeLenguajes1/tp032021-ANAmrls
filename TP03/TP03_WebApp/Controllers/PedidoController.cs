@@ -35,7 +35,7 @@ namespace TP03_WebApp.Controllers
             _repoClientes = repoClientes;
             _mapper = mapper;
         }
-
+        
         public IActionResult Index()
         {
             if (HttpContext.Session.GetInt32("ID") != null)
@@ -51,24 +51,30 @@ namespace TP03_WebApp.Controllers
             }            
         }
 
-        public IActionResult RealizarPedido()
+        [HttpGet]
+        public IActionResult CrearPedido(int idCliente)
         {
-            return View();
+            PedidoCrearViewModel pedidoVM = new()
+            {
+                Cliente = _mapper.Map<ClienteViewModel>(_repoClientes.GetClienteByID(idCliente))
+            };
+            return View(pedidoVM);
         }
 
-        public IActionResult CrearPedido(string obs, string nombre, string apellido,
-                                         string direccion, string tel)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CrearPedido(PedidoCrearViewModel pedido)
         {
             try
             {
-                if (long.TryParse(tel, out long telefono))
+                if (ModelState.IsValid)
                 {
-                    Cliente nuevoCliente = new(nombre, apellido, direccion, telefono);
-                    _repoClientes.CreateCliente(nuevoCliente);
-                    nuevoCliente.Id = _repoClientes.GetLastClienteID();
-                    Pedido nuevoPedido = new(obs);
-                    nuevoPedido.Cliente = nuevoCliente;
+                    Pedido nuevoPedido = _mapper.Map<Pedido>(pedido);                    
                     _repoPedidos.GuardarPedidoEnBD(nuevoPedido);
+                }
+                else
+                {
+                    return View(pedido);
                 }
             }
             catch (Exception ex)
@@ -92,31 +98,75 @@ namespace TP03_WebApp.Controllers
             _repoPedidos.AsignarCadete(idPedido, idCadete);
 
             return RedirectToAction(nameof(Index));
-        }
-
-        //private void QuitarPedidoDeCadete(int idPedido)
-        //{
-        //    _DB.Cadeteria.Cadetes.ForEach(cadete =>
-        //    {
-        //        cadete.PedidosDelDia.RemoveAll(y => y.Nro == idPedido);
-        //    });
-        //}
+        }        
 
         public IActionResult EliminarPedido(int idPedido)
-        {
-            ViewBag.Eliminacion = _repoPedidos.DeletePedido(idPedido);
-            //TODO agregar lo de viewbag al view model
-            return RedirectToAction(nameof(Index));
-        }
+        {            
+            var pedidoIndexVM = new PedidoIndexViewModel();
 
-        public IActionResult EntregarPedido(int idPedido, string estado)
-        {
-            if (estado == "on")
+            try
             {
-                ViewBag.Entrega = _repoPedidos.CambiarEstadoPedido(idPedido);
+                Pedido pedido = _repoPedidos.GetPedidoByID(idPedido);
+                if (pedido.Estado == EstadoPedido.Entregado)
+                {
+                    pedidoIndexVM.ConfirmacionDeEliminacion = false;                    
+                }
+                else
+                {
+                    pedidoIndexVM.ConfirmacionDeEliminacion = _repoPedidos.DeletePedido(idPedido);
+                }
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
             }
 
-            return RedirectToAction(nameof(Index));
+            pedidoIndexVM.Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
+            pedidoIndexVM.Pedidos = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll());
+
+            return View("Index", pedidoIndexVM);
+        }
+
+        public IActionResult EntregarPedido(int idPedido, string checkBox)
+        {            
+            var pedidoIndexVM = new PedidoIndexViewModel();
+            try
+            {
+                int idCadete = _repoPedidos.GetIDCadeteAsignado(idPedido);
+
+                if (checkBox == "on" && idCadete > 0)
+                {
+                    _repoPedidos.CambiarEstadoPedido(idPedido);
+                }
+                else
+                {
+                    pedidoIndexVM.ConfirmacionDeEntrega = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
+            }
+
+            pedidoIndexVM.Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
+            pedidoIndexVM.Pedidos = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll());
+            return View("Index", pedidoIndexVM);
         }
     }
 }

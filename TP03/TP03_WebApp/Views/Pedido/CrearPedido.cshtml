@@ -1,0 +1,58 @@
+﻿@model TP03_WebApp.Models.ViewModels.PedidoCrearViewModel
+@{
+    ViewData["Title"] = "Realizar Pedido";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Realice su Pedido</h1>
+</div>
+<form asp-action="CrearPedido" asp-controller="Pedido" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <fieldset class="row g-3">
+        <legend class="col-md-6 mt-3">Datos Personales</legend>
+        <div class="col-md-6 mt-3">
+            <label asp-for="Cliente.Nombre" class="form-label"></label>
+            <input asp-for="Cliente.Nombre" class="form-control" value="@Model.Cliente.Nombre" readonly />
+            <span asp-validation-for="Cliente.Nombre" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mt-3">
+            <label asp-for="Cliente.Apellido" class="form-label"></label>
+            <input asp-for="Cliente.Apellido" class="form-control" value="@Model.Cliente.Apellido" readonly />
+            <span asp-validation-for="Cliente.Apellido" class="text-danger"></span>
+        </div>
+        <div class="col-12  mt-3">
+            <label asp-for="Cliente.Direccion" class="form-label"></label>
+            <input asp-for="Cliente.Direccion" class="form-control" value="@Model.Cliente.Direccion" readonly />
+            <span asp-validation-for="Cliente.Direccion" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mt-3">
+            <label asp-for="Cliente.Telefono" class="form-label"></label>
+            <input asp-for="Cliente.Telefono" class="form-control" value="@Model.Cliente.Telefono" readonly />
+            <span asp-validation-for="Cliente.Telefono" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mt-3">
+            <label asp-for="Cliente.Id" class="form-label"></label>
+            <input asp-for="Cliente.Id" class="form-control" value="@Model.Cliente.Id" readonly>
+        </div>
+    </fieldset>
+    <fieldset class="mt-4">
+        <legend>Detalles del Pedido</legend>
+        <div class="mb-3 mt-2">
+            <label asp-for="Obs" class="form-label">Observaciones</label>
+            <textarea asp-for="Obs" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Obs" class="text-danger"></span>
+        </div>
+    </fieldset>
+    <div class="row g-3 text-center">
+        <div class="col-md-6 mt-3">
+            <a class="btn btn-secondary" asp-controller="Pedido" asp-action="Index">Cancelar</a>
+        </div>
+        <div class="col-md-6 mt-3">
+            <input type="submit" class="btn btn-primary" value="Guardar" />
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

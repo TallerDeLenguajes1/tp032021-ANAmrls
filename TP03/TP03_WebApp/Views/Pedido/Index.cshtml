@@ -5,9 +5,9 @@
 
 <div class="text-center">
     <h1 class="display-3 mb-3 text-primary">Listado de Pedidos</h1>
-    @if (ViewBag.Entrega != null)
+    @if (Model.ConfirmacionDeEntrega != null)
     {
-        if (!ViewBag.Entrega)
+        if (Model.ConfirmacionDeEntrega == false)
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 Primero debe asignar un cadete.
@@ -18,13 +18,11 @@
                 </button>
             </div>
         }
-
-
     }
 
-    @if (ViewBag.Eliminacion != null)
+    @if (Model.ConfirmacionDeEliminacion != null)
     {
-        if (ViewBag.Eliminacion)
+        if (Model.ConfirmacionDeEliminacion == true)
         {
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Pedido eliminado con éxito!
@@ -70,7 +68,26 @@
                     <td class="align-middle">@item.Estado</td>
                     <td class="align-middle">
                         <form class="row justify-content-around" asp-action="AsignarPedidoACadete" asp-controller="Pedido" method="post">
-                            @if (item.Estado == TP03_WebApp.Entidades.EstadoPedido.Entregado)
+                            @if (item.Estado == TP03_WebApp.Entidades.EstadoPedido.Pendiente)
+                            {
+                                <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
+                                <select class="custom-select-sm" name="idCadete">
+                                    <option selected>Seleccionar</option>
+                                    @foreach (var cadete in Model.Cadetes)
+                                    {
+                                        if (cadete.PedidosDelDia.Exists(a => a.Nro == item.Nro))
+                                        {
+                                            <option selected value="@cadete.Id">@cadete.Apellido (@cadete.PedidosDelDia.Count())</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@cadete.Id">@cadete.Apellido (@cadete.PedidosDelDia.Count())</option>
+                                        }
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-info">Asignar</button>
+                            }
+                            else
                             {
                                 <fieldset disabled>
                                     <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
@@ -91,45 +108,26 @@
                                     <button type="submit" class="btn btn-sm btn-info">Asignar</button>
                                 </fieldset>
                             }
-                            else
-                            {
-                                <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
-                                <select class="custom-select-sm" name="idCadete">
-                                    <option selected>Seleccionar</option>
-                                    @foreach (var cadete in Model.Cadetes)
-                                    {
-                                        if (cadete.PedidosDelDia.Exists(a => a.Nro == item.Nro))
-                                        {
-                                            <option selected value="@cadete.Id">@cadete.Apellido (@cadete.PedidosDelDia.Count())</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@cadete.Id">@cadete.Apellido (@cadete.PedidosDelDia.Count())</option>
-                                        }
-                                    }
-                                </select>
-                                <button type="submit" class="btn btn-sm btn-info">Asignar</button>
-                            }
                         </form>
                     </td>
                     <td class="align-middle">
                         <form asp-action="EntregarPedido" asp-controller="Pedido" method="post">
-                            @if (item.Estado == TP03_WebApp.Entidades.EstadoPedido.Entregado)
+                            @if (item.Estado == TP03_WebApp.Entidades.EstadoPedido.Pendiente)
                             {
-                                <fieldset disabled>
+                                <fieldset>
                                     <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input position-static" type="checkbox" id="entregado" aria-label="..." name="estado" checked>
+                                        <input class="form-check-input position-static" type="checkbox" id="checkBox" aria-label="..." name="checkBox">
                                     </div>
                                     <button type="submit" class="btn btn-sm btn-success">Entregado</button>
                                 </fieldset>
                             }
                             else
                             {
-                                <fieldset>
+                                <fieldset disabled>
                                     <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input position-static" type="checkbox" id="entregado" aria-label="..." name="estado">
+                                        <input class="form-check-input position-static" type="checkbox" id="checkBox" aria-label="..." name="checkBox" checked>
                                     </div>
                                     <button type="submit" class="btn btn-sm btn-success">Entregado</button>
                                 </fieldset>
@@ -151,6 +149,6 @@
         </tbody>
     </table>
     <div class="btn">
-        <a class="btn btn-primary" asp-area="" asp-controller="Pedido" asp-action="RealizarPedido">Nuevo Pedido</a>
+        <a class="btn btn-primary" asp-area="" asp-controller="Pedido" asp-action="CrearPedido">Nuevo Pedido</a>
     </div>
 </div>

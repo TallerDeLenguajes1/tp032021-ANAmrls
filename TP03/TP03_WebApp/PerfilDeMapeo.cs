@@ -17,10 +17,17 @@ namespace TP03_WebApp
 
             //Maps para pedidos
             CreateMap<Pedido, PedidoViewModel>().ReverseMap();
+            CreateMap<Pedido, PedidoCrearViewModel>().ReverseMap();
+
 
             //Maps para clientes
             CreateMap<Cliente, ClienteViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteIndexViewModel>().ReverseMap();
+            CreateMap<Cliente, ClienteCreateViewModel>().ReverseMap();
+
+            //Maps para usuarios
+            CreateMap<Usuario, UsuarioIndexViewModel>().ReverseMap();
+            CreateMap<Usuario, UsuarioCreateViewModel>().ReverseMap();
         }
     }
 }

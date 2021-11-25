@@ -201,5 +201,94 @@ namespace TP03_WebApp.Models.DB
                 _logger.Error(mensaje);
             }
         }
+                
+        public Pedido GetPedidoByID(int idPedido)
+        {
+            Pedido pedidoBuscado = new Pedido();
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "SELECT * FROM Pedidos " +
+                                        "WHERE pedidoID = @pedidoID;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@pedidoID", idPedido);
+                        connection.Open();
+
+                        using (SQLiteDataReader dataReader = command.ExecuteReader())
+                        {
+                            dataReader.Read();
+                            pedidoBuscado.Nro = Convert.ToInt32(dataReader["pedidoID"]);
+                            pedidoBuscado.Obs = dataReader["pedidoObs"].ToString();
+
+                            if (Enum.TryParse(dataReader["pedidoEstado"].ToString(), out EstadoPedido estadoPedido))
+                            {
+                                pedidoBuscado.Estado = estadoPedido;
+                            }
+                            else
+                            {
+                                pedidoBuscado.Estado = EstadoPedido.Pendiente;
+                            }
+
+                            pedidoBuscado.Cliente = new Cliente
+                            {
+                                Id = Convert.ToInt32(dataReader["clienteID"]),
+                                Nombre = dataReader["clienteNombre"].ToString(),
+                                Apellido = dataReader["clienteApellido"].ToString(),
+                                Direccion = dataReader["clienteDireccion"].ToString(),
+                                Telefono = Convert.ToInt64(dataReader["clienteTelefono"])
+                            };
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+
+            return pedidoBuscado;
+        }
+
+        public int GetIDCadeteAsignado(int idPedido)
+        {
+            int idCadete = 0;
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "SELECT cadeteID FROM Pedidos " +
+                                            "WHERE pedidoID = @idPedido;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@idPedido", idPedido);
+                        connection.Open();
+
+                        using (SQLiteDataReader dataReader = command.ExecuteReader())
+                        {
+                            dataReader.Read();
+                            idCadete = Convert.ToInt32(dataReader["cadeteID"]);
+                            connection.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+
+            return idCadete;
+        }
     }
 }
