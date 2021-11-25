@@ -8,7 +8,7 @@ using TP03_WebApp.Entidades;
 
 namespace TP03_WebApp.Models.DB
 {
-    public class RepositorioUsuario
+    public class RepositorioUsuario : IUsuarioDB
     {
         private readonly ILogger _logger;
         private readonly string connectionString;
@@ -57,7 +57,7 @@ namespace TP03_WebApp.Models.DB
             }
         }
 
-        public int GetUsuarioID (string nombre, string pass)
+        public int GetUsuarioID(string nombre, string pass)
         {
             int usuarioID = 0;
             try
@@ -77,7 +77,7 @@ namespace TP03_WebApp.Models.DB
                             dataReader.Read();
                             usuarioID = Convert.ToInt32(dataReader["usuarioID"]);
                             connection.Close();
-                        }                        
+                        }
                     }
                 }
             }
@@ -91,7 +91,7 @@ namespace TP03_WebApp.Models.DB
             return usuarioID;
         }
 
-        public int GetUsuarioNivel (int idUsuario)
+        public int GetUsuarioNivel(int idUsuario)
         {
             int usuarioNivel = 0;
 
@@ -111,7 +111,7 @@ namespace TP03_WebApp.Models.DB
                             dataReader.Read();
                             usuarioNivel = Convert.ToInt32(dataReader["usuarioNivel"]);
                             connection.Close();
-                        }                        
+                        }
                     }
                 }
             }

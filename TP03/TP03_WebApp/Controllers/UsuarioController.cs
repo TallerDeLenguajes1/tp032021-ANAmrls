@@ -18,12 +18,12 @@ namespace TP03_WebApp.Controllers
     public class UsuarioController : Controller
     {
         private readonly ILogger<UsuarioController> _logger;
-        private readonly RepositorioUsuario _repoUsuario;
+        private readonly IUsuarioDB _repoUsuario;
         private readonly IMapper _mapper;
 
         public UsuarioController(
             ILogger<UsuarioController> logger,
-            RepositorioUsuario repoUsuario,
+            IUsuarioDB repoUsuario,
             IMapper mapper)
         {
             _logger = logger;

@@ -8,17 +8,17 @@ namespace TP03_WebApp.Models.ViewModels
 {
     public class UsuarioCreateViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Por favor ingrese un nombre de usuario")]
         [StringLength(15)]
         [Display(Name = "Nombre de Usuario")]
         public string Nombre { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Ingrese una dirección de correo válida")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Ingrese una contraseña")]
         [StringLength(15, ErrorMessage = "La {0} debe tener al menos {2} y como máximo {1} caracteres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]

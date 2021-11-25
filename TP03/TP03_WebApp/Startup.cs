@@ -38,7 +38,8 @@ namespace TP03_WebApp
             services.AddSingleton<ICadeteDB>(new RepositorioCadete(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
             services.AddSingleton<IClienteDB>(new RepositorioCliente(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
             services.AddSingleton<IPedidoDB>(new RepositorioPedido(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
-            services.AddSingleton(new RepositorioUsuario(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()));
+            IUsuarioDB repoUsuario = new RepositorioUsuario(Configuration.GetConnectionString("Default"), NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger());
+            services.AddSingleton(repoUsuario);
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
                 {
