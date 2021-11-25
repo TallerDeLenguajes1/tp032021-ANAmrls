@@ -165,5 +165,44 @@ namespace TP03_WebApp.Models.DB
 
             return idBuscado;
         }
+
+        public Cliente GetClienteByID(int idCliente)
+        {
+            Cliente clienteBuscado = new Cliente();
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "SELECT * FROM Clientes " +
+                                        "WHERE clienteID = @clienteID AND clienteActivo = 1;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@clienteID", idCliente);
+                        connection.Open();
+
+                        using (SQLiteDataReader dataReader = command.ExecuteReader())
+                        {
+                            dataReader.Read();
+                            clienteBuscado.Id = Convert.ToInt32(dataReader["clienteID"]);
+                            clienteBuscado.Nombre = dataReader["clienteNombre"].ToString();
+                            clienteBuscado.Apellido = dataReader["clienteApellido"].ToString();
+                            clienteBuscado.Direccion = dataReader["clienteDireccion"].ToString();
+                            clienteBuscado.Telefono = Convert.ToInt64(dataReader["clienteTelefono"]);
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+
+            return clienteBuscado;
+        }
     }
 }

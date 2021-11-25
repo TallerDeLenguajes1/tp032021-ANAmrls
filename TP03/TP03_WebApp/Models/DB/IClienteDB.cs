@@ -12,5 +12,6 @@ namespace TP03_WebApp.Models.DB
         void CreateCliente(Cliente cliente);
         bool DeleteCliente(int idCliente);
         int GetLastClienteID();
+        Cliente GetClienteByID(int idCliente);
     }
 }
