@@ -53,6 +53,7 @@ namespace TP03_WebApp.Controllers
         }
 
         [HttpGet]
+        [ViewLayout("_ClienteLayout")]
         public IActionResult CrearPedido(int idCliente)
         {
             PedidoCrearViewModel pedidoVM = new()

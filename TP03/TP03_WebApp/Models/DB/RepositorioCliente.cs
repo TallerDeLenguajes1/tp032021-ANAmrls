@@ -100,12 +100,14 @@ namespace TP03_WebApp.Models.DB
                 {
                     string sqlQuery = "INSERT INTO Clientes " +
                                         "(" +
+                                            "clienteID, " +
                                             "clienteNombre, " +
                                             "clienteApellido, " +
                                             "clienteTelefono, " +
                                             "clienteDireccion" +
                                         ")" +
                                         "VALUES (" +
+                                            "@clienteID, " +
                                             "@clienteNombre, " +
                                             "@clienteApellido, " +
                                             "@clienteTelefono, " +
@@ -114,6 +116,7 @@ namespace TP03_WebApp.Models.DB
 
                     using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
                     {
+                        command.Parameters.AddWithValue("@clienteID", cliente.Id);
                         command.Parameters.AddWithValue("@clienteNombre", cliente.Nombre);
                         command.Parameters.AddWithValue("@clienteApellido", cliente.Apellido);
                         command.Parameters.AddWithValue("@clienteTelefono", cliente.Telefono);
@@ -260,6 +263,41 @@ namespace TP03_WebApp.Models.DB
                 _logger.Error(mensaje);
             }
             return pedidos;
+        }
+
+        public void EditCliente(Cliente cliente)
+        {
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "UPDATE Clientes " +
+                                        "SET clienteNombre = @nombre, " +
+                                            "clienteApellido = @apellido, " +
+                                            "clienteDireccion = @direccion, " +
+                                            "clienteTelefono = @telefono " +
+                                        "WHERE clienteID = @id;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@nombre", cliente.Nombre);
+                        command.Parameters.AddWithValue("@apellido", cliente.Apellido);
+                        command.Parameters.AddWithValue("@direccion", cliente.Direccion);
+                        command.Parameters.AddWithValue("@telefono", cliente.Telefono);
+                        command.Parameters.AddWithValue("@id", cliente.Id);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
         }
     }
 }

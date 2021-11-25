@@ -3,32 +3,36 @@
     ViewData["Title"] = "Inicio de Sesión";
 }
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 offset-md-4">
-                <div class="login-form bg-light border border-secondary rounded mt-4 p-4">
-                    <form class="row g-3" asp-action="LogIn" asp-controller="Usuario" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <h4 class="ml-3">Iniciar Sesión</h4>
-                        <div class="col-12">
-                            <label asp-for="Nombre" class="control-label mt-3"></label>
-                            <input asp-for="Nombre" class="form-control" />
-                            <span asp-validation-for="Nombre" class="text-danger"></span>
-                        </div>
-                        <div class="col-12">
-                            <label asp-for="Password" class="control-label mt-3"></label>
-                            <input asp-for="Password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>                        
-                        <div class="col-12 mt-4">
-                            <button type="submit" class="btn btn-dark float-end">Login</button>
-                        </div>
-                    </form>
-                    <hr class="mt-4">
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="login-form bg-light border border-secondary rounded mt-4 p-4">
+                <form class="row g-3" asp-action="LogIn" asp-controller="Usuario" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <h4 class="ml-3">Iniciar Sesión</h4>
                     <div class="col-12">
-                        <p class="text-center mb-0">Aún no tiene una cuenta? <a asp-action="CreateUsuario">Crear Cuenta</a></p>
+                        <label asp-for="Nombre" class="control-label mt-3"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
                     </div>
+                    <div class="col-12">
+                        <label asp-for="Password" class="control-label mt-3"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-dark float-end">Login</button>
+                    </div>
+                </form>
+                <hr class="mt-4">
+                <div class="col-12">
+                    <p class="text-center mb-0">Aún no tiene una cuenta? <a asp-action="CreateUsuario">Crear Cuenta</a></p>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

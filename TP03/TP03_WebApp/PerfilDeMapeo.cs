@@ -24,6 +24,7 @@ namespace TP03_WebApp
             CreateMap<Cliente, ClienteViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteIndexViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteCreateViewModel>().ReverseMap();
+            CreateMap<Cliente, ClienteEditViewModel>().ReverseMap();
 
             //Maps para usuarios
             CreateMap<Usuario, UsuarioIndexViewModel>().ReverseMap();

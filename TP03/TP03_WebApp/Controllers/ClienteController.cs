@@ -14,6 +14,7 @@ using TP03_WebApp.Models.ViewModels;
 
 namespace TP03_WebApp.Controllers
 {
+    [ViewLayout("_ClienteLayout")]
     public class ClienteController : Controller
     {
         private readonly ILogger<ClienteController> _logger;
@@ -71,6 +72,7 @@ namespace TP03_WebApp.Controllers
         }
 
         // GET: ClienteController/Create
+        [ViewLayout("_UsuarioLayout")]
         public ActionResult CreateCliente()
         {
             return View(new ClienteCreateViewModel());
@@ -86,6 +88,7 @@ namespace TP03_WebApp.Controllers
                 if (ModelState.IsValid)
                 {
                     Cliente clienteNuevo = _mapper.Map<Cliente>(cliente);
+                    clienteNuevo.Id = (int)HttpContext.Session.GetInt32("ID");
                     _repoClientes.CreateCliente(clienteNuevo);
                 }
                 else
@@ -110,23 +113,43 @@ namespace TP03_WebApp.Controllers
         }
 
         // GET: ClienteController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int idCliente)
         {
-            return View();
+            var clienteVM = _mapper.Map<ClienteEditViewModel>(_repoClientes.GetClienteByID(idCliente));
+            return View(clienteVM);
         }
 
         // POST: ClienteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(ClienteEditViewModel clienteEdit)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    Cliente cliente = _mapper.Map<Cliente>(clienteEdit);
+                    _repoClientes.EditCliente(cliente);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return View(clienteEdit);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
+
+                return RedirectToAction(nameof(Error));
             }
         }
 

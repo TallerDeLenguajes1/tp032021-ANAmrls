@@ -11,6 +11,7 @@ namespace TP03_WebApp.Models.DB
         List<Cliente> GetAll();
         void CreateCliente(Cliente cliente);
         bool DeleteCliente(int idCliente);
+        void EditCliente(Cliente cliente);
         int GetLastClienteID();
         Cliente GetClienteByID(int idCliente);
         List<Pedido> GetPedidos(int idCliente);

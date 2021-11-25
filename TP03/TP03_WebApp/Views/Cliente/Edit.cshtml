@@ -1,37 +1,42 @@
-﻿@model TP03_WebApp.Models.ViewModels.ClienteCreateViewModel
+﻿@model TP03_WebApp.Models.ViewModels.ClienteEditViewModel
 
 @{
-    ViewData["Title"] = "Crear Cuenta de Cliente";
+    ViewData["Title"] = "Edit";
 }
 
-<div class="text-center">
-    <h1 class="display-6">Complete el formulario para crear una cuenta</h1>
-</div>
-
-<form class="row g-3" asp-action="CreateCliente" method="post">
+<h4>Modificar datos personales</h4>
+<hr />
+<form class="row g-3" asp-action="Edit" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="col-md-6 mt-3">
         <label asp-for="Nombre" class="form-label"></label>
-        <input asp-for="Nombre" class="form-control" />
+        <input asp-for="Nombre" class="form-control" value="@Model.Nombre" />
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
     <div class="col-md-6 mt-3">
         <label asp-for="Apellido" class="form-label"></label>
-        <input asp-for="Apellido" class="form-control" />
+        <input asp-for="Apellido" class="form-control" value="@Model.Apellido" />
         <span asp-validation-for="Apellido" class="text-danger"></span>
     </div>
     <div class="col-12  mt-3">
         <label asp-for="Direccion" class="form-label"></label>
-        <input asp-for="Direccion" class="form-control" />
+        <input asp-for="Direccion" class="form-control" value="@Model.Direccion" />
         <span asp-validation-for="Direccion" class="text-danger"></span>
     </div>
     <div class="col-md-6  mt-3">
         <label asp-for="Telefono" class="form-label"></label>
-        <input asp-for="Telefono" class="form-control" placeholder="Ej: 3815123123" />
+        <input asp-for="Telefono" class="form-control" value="@Model.Telefono" />
         <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+    <div class="col-md-6  mt-3">
+        <label asp-for="Id" class="form-label">Id</label>
+        <input asp-for="Id" class="form-control" value="@Model.Id" readonly>
     </div>
     <div class="col-12 mt-3">
         <input type="submit" class="btn btn-primary" value="Guardar" />
+    </div>
+    <div class="col-md-6 mt-3">
+        <a class="btn btn-secondary" asp-controller="Cliente" asp-action="Index">Cancelar</a>
     </div>
 </form>
 

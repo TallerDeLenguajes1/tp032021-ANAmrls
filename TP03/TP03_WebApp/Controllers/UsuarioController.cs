@@ -15,6 +15,7 @@ using AutoMapper;
 
 namespace TP03_WebApp.Controllers
 {
+    [ViewLayout("_UsuarioLayout")]
     public class UsuarioController : Controller
     {
         private readonly ILogger<UsuarioController> _logger;
@@ -107,6 +108,10 @@ namespace TP03_WebApp.Controllers
                 {
                     Usuario nuevoUsuario = _mapper.Map<Usuario>(usuario);
                     _repoUsuario.CreateUsuario(nuevoUsuario);
+                    int usuarioID = _repoUsuario.GetUsuarioID(nuevoUsuario.Nombre, nuevoUsuario.Password);
+                    int usuarioNivel = _repoUsuario.GetUsuarioNivel(usuarioID);
+                    HttpContext.Session.SetInt32("ID", usuarioID);
+                    HttpContext.Session.SetInt32("nivel", usuarioNivel);
                 }
                 else
                 {
