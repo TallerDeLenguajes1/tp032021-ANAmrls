@@ -53,7 +53,16 @@ namespace TP03_WebApp.Controllers
                     {
                         HttpContext.Session.SetInt32("ID", usuarioID);
                         HttpContext.Session.SetInt32("nivel", usuarioNivel);
-                        return RedirectToAction("Index", "Home");
+
+                        if (usuarioNivel == 3)
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            return RedirectToAction(nameof(ClienteController.Index), nameof(Cliente));
+                        }
+                        
                     }
                     else
                     {

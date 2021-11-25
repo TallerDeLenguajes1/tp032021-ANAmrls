@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TP03_WebApp.Entidades;
+using TP03_WebApp.Models;
 using TP03_WebApp.Models.DB;
 using TP03_WebApp.Models.ViewModels;
 
@@ -30,8 +32,36 @@ namespace TP03_WebApp.Controllers
 
         // GET: ClienteController
         public ActionResult Index()
-        {
-            return View();
+        {            
+            try
+            {
+                if (HttpContext.Session.GetInt32("ID") != null)
+                {
+                    int? idCliente = HttpContext.Session.GetInt32("ID");
+                    ClienteIndexViewModel clienteVM = _mapper.Map<ClienteIndexViewModel>(_repoClientes.GetClienteByID((int)idCliente));
+                    clienteVM.HistorialDePedidos = _mapper.Map<List<PedidoViewModel>>(_repoClientes.GetPedidos((int)idCliente));
+                    return View(clienteVM);
+                }
+                else
+                {
+                    return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
+
+                return RedirectToAction(nameof(Error));
+            }            
         }
 
         // GET: ClienteController/Details/5
@@ -119,6 +149,12 @@ namespace TP03_WebApp.Controllers
             {
                 return View();
             }
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

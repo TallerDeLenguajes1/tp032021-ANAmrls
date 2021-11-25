@@ -13,5 +13,6 @@ namespace TP03_WebApp.Models.DB
         bool DeleteCliente(int idCliente);
         int GetLastClienteID();
         Cliente GetClienteByID(int idCliente);
+        List<Pedido> GetPedidos(int idCliente);
     }
 }

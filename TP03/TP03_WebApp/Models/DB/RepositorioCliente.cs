@@ -204,5 +204,62 @@ namespace TP03_WebApp.Models.DB
 
             return clienteBuscado;
         }
+
+        public List<Pedido> GetPedidos(int idCliente)
+        {
+            List<Pedido> pedidos = new List<Pedido>();
+
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = @"SELECT pedidoID,
+                                            pedidoObs,
+                                            pedidoEstado
+                                        FROM Pedidos
+                                            INNER JOIN
+                                            Clientes USING (
+                                            clienteID
+                                            )
+                                        WHERE clienteID = @clienteID
+                                            AND clienteActivo = 1;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@clienteID", idCliente);
+                        connection.Open();
+
+                        using (SQLiteDataReader dataReader = command.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                Pedido pedido = new Pedido();
+                                pedido.Nro = Convert.ToInt32(dataReader["pedidoID"]);
+                                pedido.Obs = dataReader["pedidoObs"].ToString();
+
+                                if (Enum.TryParse(dataReader["pedidoEstado"].ToString(), out EstadoPedido estadoPedido))
+                                {
+                                    pedido.Estado = estadoPedido;
+                                }
+                                else
+                                {
+                                    pedido.Estado = EstadoPedido.Pendiente;
+                                }
+
+                                pedidos.Add(pedido);
+                            }
+                        }
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+            return pedidos;
+        }
     }
 }

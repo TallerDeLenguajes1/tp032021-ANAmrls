@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
 using TP03_WebApp.Models.ViewModels;
 using AutoMapper;
+using System.Diagnostics;
 
 namespace TP03_WebApp.Controllers
 {
@@ -71,6 +72,7 @@ namespace TP03_WebApp.Controllers
                 {
                     Pedido nuevoPedido = _mapper.Map<Pedido>(pedido);                    
                     _repoPedidos.GuardarPedidoEnBD(nuevoPedido);
+                    return RedirectToAction(nameof(ClienteController.Index), nameof(Cliente));
                 }
                 else
                 {
@@ -88,9 +90,9 @@ namespace TP03_WebApp.Controllers
 
                 mensaje = mensaje + " Stack trace: " + ex.StackTrace;
                 _logger.LogError(mensaje);
-            }
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Error));
+            }
         }
 
         public IActionResult AsignarPedidoACadete(int idPedido, int idCadete)
@@ -167,6 +169,12 @@ namespace TP03_WebApp.Controllers
             pedidoIndexVM.Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
             pedidoIndexVM.Pedidos = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll());
             return View("Index", pedidoIndexVM);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
