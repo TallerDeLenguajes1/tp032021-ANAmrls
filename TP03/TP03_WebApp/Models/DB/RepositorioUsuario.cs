@@ -25,19 +25,23 @@ namespace TP03_WebApp.Models.DB
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    string sqlQuery = "INSERT INTO Cadetes " +
+                    string sqlQuery = "INSERT INTO Usuarios " +
                                         "(" +
                                             "usuarioNombre, " +
-                                            "usuarioPassword" +
+                                            "usuarioPassword, " +
+                                            "usuarioEmail" +
                                         ")" +
                                         "VALUES (" +
                                             "@usuarioNombre, " +
-                                            "@usuarioPassword" +
+                                            "@usuarioPassword, " +
+                                            "@usuarioEmail" +
                                         ");";
 
                     using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
                     {
                         command.Parameters.AddWithValue("@usuarioNombre", usuario.Nombre);
+                        command.Parameters.AddWithValue("@usuarioPassword", usuario.Password);
+                        command.Parameters.AddWithValue("@usuarioEmail", usuario.Email);
 
                         connection.Open();
                         command.ExecuteNonQuery();

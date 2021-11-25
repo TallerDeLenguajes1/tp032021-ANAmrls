@@ -29,7 +29,7 @@ namespace TP03_WebApp.Controllers
             } 
             else 
             {
-                return RedirectToAction("Index", "Usuario");
+                return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
             }
             
         }
