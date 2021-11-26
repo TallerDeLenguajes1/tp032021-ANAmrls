@@ -54,13 +54,40 @@ namespace TP03_WebApp.Controllers
 
         [HttpGet]
         [ViewLayout("_ClienteLayout")]
-        public IActionResult CrearPedido(int idCliente)
+        public IActionResult CrearPedido()
         {
-            PedidoCrearViewModel pedidoVM = new()
+            try
             {
-                Cliente = _mapper.Map<ClienteViewModel>(_repoClientes.GetClienteByID(idCliente))
-            };
-            return View(pedidoVM);
+                if (HttpContext.Session.GetInt32("ID") != null)
+                {
+                    int idCliente = HttpContext.Session.GetInt32("ID").Value;
+
+                    PedidoCrearViewModel pedidoVM = new()
+                    {
+                        Cliente = _mapper.Map<ClienteViewModel>(_repoClientes.GetClienteByID(idCliente))
+                    };
+
+                    return View(pedidoVM);
+                }
+                else
+                {
+                    return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
+                }
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
+
+                return RedirectToAction(nameof(Error));
+            }
         }
 
         [HttpPost]
