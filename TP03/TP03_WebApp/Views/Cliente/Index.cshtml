@@ -4,19 +4,16 @@
     ViewData["Title"] = "Index";
 }
 
-<h1 class="display-4 mb-4 text-primary">Hola de nuevo @Html.DisplayFor(model => model.Nombre)</h1>
-<h6>
-    @Html.ActionLink("Modificar datos personales", "Edit", "Cliente", new { idCliente = Model.Id })
-</h6>
+<h1 class="display-5 mb-4 text-primary">Hola de nuevo: @Html.DisplayFor(model => model.Nombre)</h1>
 <hr />
 <div class="text-center">
     <h3 class="display-5 mb-2">Tu Historial de Pedidos</h3>
-    <table class="table table-dark table-striped table-bordered">
+    <table class="table table-sm table-dark table-striped table-bordered mt-3">
         <thead>
             <tr>
-                <th class="align-middle" scope="col">Número de Pedido</th>
+                <th class="align-middle col-3" scope="col">Número de Pedido</th>
                 <th class="align-middle" scope="col">Observación</th>
-                <th class="align-middle" scope="col">Estado</th>
+                <th class="align-middle col-3" scope="col">Estado</th>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +27,4 @@
             }
         </tbody>
     </table>
-    <div class="btn btn-dark mt-3 text-decoration-none">
-        @Html.ActionLink("Realizar Un Pedido", "CrearPedido", "Pedido", new { idCliente = Model.Id })
-    </div>
 </div>

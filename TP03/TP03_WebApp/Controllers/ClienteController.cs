@@ -38,7 +38,7 @@ namespace TP03_WebApp.Controllers
             {
                 if (HttpContext.Session.GetInt32("ID") != null)
                 {
-                    int? idCliente = HttpContext.Session.GetInt32("ID");
+                    int idCliente = HttpContext.Session.GetInt32("ID").Value;
                     ClienteIndexViewModel clienteVM = _mapper.Map<ClienteIndexViewModel>(_repoClientes.GetClienteByID((int)idCliente));
                     clienteVM.HistorialDePedidos = _mapper.Map<List<PedidoViewModel>>(_repoClientes.GetPedidos((int)idCliente));
                     return View(clienteVM);
@@ -66,10 +66,10 @@ namespace TP03_WebApp.Controllers
         }
 
         // GET: ClienteController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+        //public ActionResult Details(int id)
+        //{
+        //    return View();
+        //}
 
         // GET: ClienteController/Create
         [ViewLayout("_UsuarioLayout")]
@@ -113,10 +113,35 @@ namespace TP03_WebApp.Controllers
         }
 
         // GET: ClienteController/Edit/5
-        public ActionResult Edit(int idCliente)
+        public ActionResult Edit()
         {
-            var clienteVM = _mapper.Map<ClienteEditViewModel>(_repoClientes.GetClienteByID(idCliente));
-            return View(clienteVM);
+            try
+            {
+                if (HttpContext.Session.GetInt32("ID") != null)
+                {
+                    int idCliente = HttpContext.Session.GetInt32("ID").Value;
+                    var clienteVM = _mapper.Map<ClienteEditViewModel>(_repoClientes.GetClienteByID(idCliente));
+                    return View(clienteVM);
+                }
+                else
+                {
+                    return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
+                }
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
+
+                return RedirectToAction(nameof(Error));
+            }
         }
 
         // POST: ClienteController/Edit/5
@@ -177,7 +202,8 @@ namespace TP03_WebApp.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+            return View(new ErrorViewModel { RequestId = "error" });
         }
     }
 }
