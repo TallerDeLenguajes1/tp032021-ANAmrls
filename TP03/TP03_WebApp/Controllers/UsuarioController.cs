@@ -91,6 +91,35 @@ namespace TP03_WebApp.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOut()
+        {
+            try
+            {
+                HttpContext.Session.Remove("ID");
+                HttpContext.Session.Remove("nivel");
+                HttpContext.Session.Clear();
+
+                return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
+
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
+
+                return RedirectToAction(nameof(Error));
+            }
+        }
+
         // GET: ClienteController/Create
         public ActionResult CreateUsuario()
         {
@@ -137,7 +166,8 @@ namespace TP03_WebApp.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+            return View(new ErrorViewModel { RequestId = "error" });
         }
     }
 }
