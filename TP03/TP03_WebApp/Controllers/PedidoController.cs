@@ -16,7 +16,10 @@ using System.Diagnostics;
 namespace TP03_WebApp.Controllers
 {
     public class PedidoController : Controller
-    {        
+    {
+        private const string SessionKeyID = "ID";
+        private const string SessionKeyNivelDeAcceso = "Nivel";
+
         private readonly ILogger<PedidoController> _logger;
         private readonly IPedidoDB _repoPedidos;
         private readonly ICadeteDB _repoCadetes;
@@ -39,7 +42,8 @@ namespace TP03_WebApp.Controllers
         
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetInt32("ID") != null)
+            if (HttpContext.Session.GetInt32(SessionKeyID) != null
+                && HttpContext.Session.GetInt32(SessionKeyNivelDeAcceso) == 3)
             {                
                 var cadetesVM = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
                 var pedidosVM = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll());                
@@ -48,19 +52,19 @@ namespace TP03_WebApp.Controllers
             } 
             else 
             {
-                return RedirectToAction("Index", "Usuario");
+                return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
             }            
         }
 
         [HttpGet]
-        [ViewLayout("_ClienteLayout")]
         public IActionResult CrearPedido()
         {
             try
             {
-                if (HttpContext.Session.GetInt32("ID") != null)
+                if (HttpContext.Session.GetInt32(SessionKeyID) != null
+                    && HttpContext.Session.GetInt32(SessionKeyNivelDeAcceso) == 1)
                 {
-                    int idCliente = HttpContext.Session.GetInt32("ID").Value;
+                    int idCliente = HttpContext.Session.GetInt32(SessionKeyID).Value;
 
                     PedidoCrearViewModel pedidoVM = new()
                     {
@@ -86,7 +90,7 @@ namespace TP03_WebApp.Controllers
                 mensaje = mensaje + " Stack trace: " + ex.StackTrace;
                 _logger.LogError(mensaje);
 
-                return RedirectToAction(nameof(Error));
+                return NotFound();
             }
         }
 
@@ -119,31 +123,25 @@ namespace TP03_WebApp.Controllers
                 mensaje = mensaje + " Stack trace: " + ex.StackTrace;
                 _logger.LogError(mensaje);
 
-                return RedirectToAction(nameof(Error));
+                return NotFound();
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AsignarPedidoACadete(int idPedido, int idCadete)
         {
-            _repoPedidos.AsignarCadete(idPedido, idCadete);
-
-            return RedirectToAction(nameof(Index));
-        }        
-
-        public IActionResult EliminarPedido(int idPedido)
-        {            
-            var pedidoIndexVM = new PedidoIndexViewModel();
-
             try
             {
-                Pedido pedido = _repoPedidos.GetPedidoByID(idPedido);
-                if (pedido.Estado == EstadoPedido.Entregado)
+                if (HttpContext.Session.GetInt32(SessionKeyID) != null
+                    && HttpContext.Session.GetInt32(SessionKeyNivelDeAcceso) == 3)
                 {
-                    pedidoIndexVM.ConfirmacionDeEliminacion = false;                    
+                    _repoPedidos.AsignarCadete(idPedido, idCadete);
+                    return RedirectToAction(nameof(Index)); 
                 }
                 else
                 {
-                    pedidoIndexVM.ConfirmacionDeEliminacion = _repoPedidos.DeletePedido(idPedido);
+                    return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
                 }
             }
             catch (Exception ex)
@@ -157,19 +155,65 @@ namespace TP03_WebApp.Controllers
 
                 mensaje = mensaje + " Stack trace: " + ex.StackTrace;
                 _logger.LogError(mensaje);
+
+                return NotFound();
             }
-
-            pedidoIndexVM.Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
-            pedidoIndexVM.Pedidos = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll());
-
-            return View("Index", pedidoIndexVM);
         }
 
-        public IActionResult EntregarPedido(int idPedido, string checkBox)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EliminarPedido(int idPedido)
         {            
             var pedidoIndexVM = new PedidoIndexViewModel();
+
             try
             {
+                if (HttpContext.Session.GetInt32(SessionKeyID) != null
+                    && HttpContext.Session.GetInt32(SessionKeyNivelDeAcceso) == 3)
+                {
+                    Pedido pedido = _repoPedidos.GetPedidoByID(idPedido);
+                    if (pedido.Estado == EstadoPedido.Entregado)
+                    {
+                        pedidoIndexVM.ConfirmacionDeEliminacion = false;
+                    }
+                    else
+                    {
+                        pedidoIndexVM.ConfirmacionDeEliminacion = _repoPedidos.DeletePedido(idPedido);
+                    }
+
+                    pedidoIndexVM.Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
+                    pedidoIndexVM.Pedidos = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll());
+
+                    return View(nameof(Index), pedidoIndexVM);
+                }
+                else
+                {
+                    return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
+                }
+            }
+            catch (Exception ex)
+            {
+                var mensaje = "Error message: " + ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    mensaje = mensaje + " Inner exception: " + ex.InnerException.Message;
+                }
+
+                mensaje = mensaje + " Stack trace: " + ex.StackTrace;
+                _logger.LogError(mensaje);
+
+                return NotFound();
+            }            
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EntregarPedido(int idPedido, string checkBox)
+        {
+            try
+            {
+                bool confirmacion = true;
                 int idCadete = _repoPedidos.GetIDCadeteAsignado(idPedido);
 
                 if (checkBox == "on" && idCadete > 0)
@@ -178,7 +222,22 @@ namespace TP03_WebApp.Controllers
                 }
                 else
                 {
-                    pedidoIndexVM.ConfirmacionDeEntrega = false;
+                    confirmacion = false;
+                }
+
+                if (HttpContext.Session.GetInt32(SessionKeyNivelDeAcceso) == 3)
+                {
+                    PedidoIndexViewModel pedidoIndexVM = new()
+                    {
+                        ConfirmacionDeEntrega = confirmacion,
+                        Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll()),
+                        Pedidos = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll())
+                    };
+                    return View(nameof(Index), pedidoIndexVM);
+                }
+                else
+                {
+                    return RedirectToAction(nameof(CadeteController.Index), nameof(Cadete));
                 }
             }
             catch (Exception ex)
@@ -192,17 +251,16 @@ namespace TP03_WebApp.Controllers
 
                 mensaje = mensaje + " Stack trace: " + ex.StackTrace;
                 _logger.LogError(mensaje);
-            }
 
-            pedidoIndexVM.Cadetes = _mapper.Map<List<CadeteViewModel>>(_repoCadetes.GetAll());
-            pedidoIndexVM.Pedidos = _mapper.Map<List<PedidoViewModel>>(_repoPedidos.GetAll());
-            return View("Index", pedidoIndexVM);
+                return NotFound();
+            }            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+            return View(new ErrorViewModel { RequestId = "error" });
         }
     }
 }

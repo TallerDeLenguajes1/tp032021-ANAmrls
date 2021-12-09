@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Listado de Pedidos";
 }
-@model TP03_WebApp.Models.ViewModels.PedidoIndexViewModel
+@model PedidoIndexViewModel
 
 <div class="text-center">
     <h1 class="display-3 mb-3 text-primary">Listado de Pedidos</h1>
@@ -10,7 +10,7 @@
         if (Model.ConfirmacionDeEntrega == false)
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                Primero debe asignar un cadete.
+                Asigne un cadete y marque el checkbox.
                 <button type="button" class="btn close" data-dismiss="alert" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square-fill" viewBox="0 0 16 16">
                         <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z" />
@@ -50,7 +50,7 @@
         <thead>
             <tr>
                 <th scope="col">Nro</th>
-                <th scope="col">Cliente</th>
+                <th scope="col" class="col-2">Cliente</th>
                 <th scope="col">Dirección</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Asignar Cadete</th>
@@ -137,7 +137,7 @@
                     <td class="align-middle">
                         <form asp-action="EliminarPedido" asp-controller="Pedido" method="post">
                             <input type="hidden" id="idPedido" name="idPedido" value="@item.Nro">
-                            <button type="submit" class="btn btn-danger">
+                            <button type="submit" class="btn btn-sm btn-danger">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-trash-fill" viewBox="0 0 18 18">
                                     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
                                 </svg>
@@ -148,7 +148,4 @@
             }
         </tbody>
     </table>
-    <div class="btn">
-        <a class="btn btn-primary" asp-area="" asp-controller="Pedido" asp-action="CrearPedido">Nuevo Pedido</a>
-    </div>
 </div>

@@ -22,18 +22,18 @@
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Cadete" asp-action="ListadoCadetes">Cadetes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Cadete" asp-action="Index">Cadetes</a>
+                            <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="CreateUsuario">Nuevo Cadete</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Pedido" asp-action="Index">Pedidos</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="Index">Log in</a>
-                        </li>
                     </ul>
+                    <form class="form-inline my-2 my-lg-0" asp-action="LogOut" asp-controller="Usuario" method="post">
+                        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Log out</button>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -45,8 +45,8 @@
     </div>
 
     <footer class="border-top footer text-muted bg-dark">
-        <div class="container">
-            &copy; 2021 - TP03_WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container text-center">
+            &copy; 2021 - TP03_WebApp
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
