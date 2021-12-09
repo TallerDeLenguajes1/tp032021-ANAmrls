@@ -7,5 +7,7 @@ namespace TP03_WebApp.Models.DB
         void CreateUsuario(Usuario usuario);
         int GetUsuarioID(string nombre, string pass);
         int GetUsuarioNivel(int idUsuario);
+        void SetUsuarioNivel(int idUsuario);
+        void DeleteUsuario(int idUsuario);
     }
 }

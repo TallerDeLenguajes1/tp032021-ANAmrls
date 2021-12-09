@@ -57,6 +57,33 @@ namespace TP03_WebApp.Models.DB
             }
         }
 
+        public void DeleteUsuario(int idUsuario)
+        {
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "UPDATE Usuarios " +
+                                      "SET usuarioActivo = 0 " +
+                                      "WHERE usuarioID = @usuarioID;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@usuarioID", idUsuario);
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
+        }
+
         public int GetUsuarioID(string nombre, string pass)
         {
             int usuarioID = 0;
@@ -64,7 +91,7 @@ namespace TP03_WebApp.Models.DB
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    string sqlQuery = "SELECT usuarioID FROM Usuarios WHERE usuarioNombre = @usuarioNombre AND usuarioPassword = @usuarioPassword;";
+                    string sqlQuery = "SELECT usuarioID FROM Usuarios WHERE usuarioActivo = 1 AND usuarioNombre = @usuarioNombre AND usuarioPassword = @usuarioPassword;";
 
                     using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
                     {
@@ -123,6 +150,33 @@ namespace TP03_WebApp.Models.DB
             }
 
             return usuarioNivel;
+        }
+
+        public void SetUsuarioNivel(int idUsuario)
+        {
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                {
+                    string sqlQuery = "UPDATE Usuarios " +
+                                      "SET usuarioNivel = 2 " +
+                                      "WHERE usuarioID = @usuarioID;";
+
+                    using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@usuarioID", idUsuario);
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "Error Message: " + ex.Message;
+                mensaje += " Stack trace: " + ex.StackTrace;
+                _logger.Error(mensaje);
+            }
         }
     }
 }

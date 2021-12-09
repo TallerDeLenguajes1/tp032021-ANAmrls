@@ -14,6 +14,9 @@ namespace TP03_WebApp.Controllers
 {
     public class HomeController : Controller
     {
+        private const string SessionKeyID = "ID";
+        private const string SessionKeyNivelDeAcceso = "Nivel";
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -23,7 +26,8 @@ namespace TP03_WebApp.Controllers
 
         public IActionResult Index()
         {            
-            if (HttpContext.Session.GetInt32("ID") != null)
+            if (HttpContext.Session.GetInt32(SessionKeyID) != null
+                && HttpContext.Session.GetInt32(SessionKeyNivelDeAcceso) == 3)
             {
                 return View();
             } 
@@ -34,15 +38,11 @@ namespace TP03_WebApp.Controllers
             
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+            return View(new ErrorViewModel { RequestId = "error" });
         }
     }
 }

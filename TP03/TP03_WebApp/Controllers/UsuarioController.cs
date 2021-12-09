@@ -14,10 +14,12 @@ using TP03_WebApp.Models.ViewModels;
 using AutoMapper;
 
 namespace TP03_WebApp.Controllers
-{
-    [ViewLayout("_UsuarioLayout")]
+{    
     public class UsuarioController : Controller
     {
+        private const string SessionKeyID = "ID";
+        private const string SessionKeyNivelDeAcceso = "Nivel";
+
         private readonly ILogger<UsuarioController> _logger;
         private readonly IUsuarioDB _repoUsuario;
         private readonly IMapper _mapper;
@@ -33,8 +35,7 @@ namespace TP03_WebApp.Controllers
         }
 
         public IActionResult Index()
-        {
-           
+        {           
             return View(new UsuarioIndexViewModel());
         }
                                         
@@ -52,27 +53,20 @@ namespace TP03_WebApp.Controllers
 
                     if (usuarioID != 0)
                     {
-                        HttpContext.Session.SetInt32("ID", usuarioID);
-                        HttpContext.Session.SetInt32("nivel", usuarioNivel);
+                        HttpContext.Session.SetInt32(SessionKeyID, usuarioID);
+                        HttpContext.Session.SetInt32(SessionKeyNivelDeAcceso, usuarioNivel);
 
-                        if (usuarioNivel == 3)
+                        switch (usuarioNivel)
                         {
-                            return RedirectToAction("Index", "Home");
+                            case 1: return RedirectToAction(nameof(ClienteController.Index), nameof(Cliente));
+                            case 2: return RedirectToAction(nameof(CadeteController.Index), nameof(Cadete));
+                            case 3: return RedirectToAction(nameof(HomeController.Index), "Home");
                         }
-                        else
-                        {
-                            return RedirectToAction(nameof(ClienteController.Index), nameof(Cliente));
-                        }
-                        
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Error));
                     }
                 }
                 else
                 {
-                    return View(usuario);
+                    return View(nameof(Index), usuario);
                 }                
             }
             catch (Exception ex)
@@ -87,8 +81,10 @@ namespace TP03_WebApp.Controllers
                 mensaje = mensaje + " Stack trace: " + ex.StackTrace;
                 _logger.LogError(mensaje);
 
-                return RedirectToAction(nameof(Error));
+                return NotFound();
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -97,8 +93,8 @@ namespace TP03_WebApp.Controllers
         {
             try
             {
-                HttpContext.Session.Remove("ID");
-                HttpContext.Session.Remove("nivel");
+                HttpContext.Session.Remove(SessionKeyID);
+                HttpContext.Session.Remove(SessionKeyNivelDeAcceso);
                 HttpContext.Session.Clear();
 
                 return RedirectToAction(nameof(UsuarioController.Index), nameof(Usuario));
@@ -116,17 +112,17 @@ namespace TP03_WebApp.Controllers
                 mensaje = mensaje + " Stack trace: " + ex.StackTrace;
                 _logger.LogError(mensaje);
 
-                return RedirectToAction(nameof(Error));
+                return NotFound();
             }
         }
 
-        // GET: ClienteController/Create
+        // GET
         public ActionResult CreateUsuario()
         {
             return View(new UsuarioCreateViewModel());
         }
 
-        // POST: ClienteController/Create
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateUsuario(UsuarioCreateViewModel usuario)
@@ -138,9 +134,22 @@ namespace TP03_WebApp.Controllers
                     Usuario nuevoUsuario = _mapper.Map<Usuario>(usuario);
                     _repoUsuario.CreateUsuario(nuevoUsuario);
                     int usuarioID = _repoUsuario.GetUsuarioID(nuevoUsuario.Nombre, nuevoUsuario.Password);
-                    int usuarioNivel = _repoUsuario.GetUsuarioNivel(usuarioID);
-                    HttpContext.Session.SetInt32("ID", usuarioID);
-                    HttpContext.Session.SetInt32("nivel", usuarioNivel);
+
+                    if (HttpContext.Session.GetInt32(SessionKeyID) != null
+                        && HttpContext.Session.GetInt32(SessionKeyNivelDeAcceso) == 3)
+                    {
+                        _repoUsuario.SetUsuarioNivel(usuarioID);
+                        return RedirectToAction(nameof(CadeteController.AltaCadete),
+                                                nameof(Cadete),
+                                                new { idNuevoCadete = usuarioID });
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(ClienteController.CreateCliente),
+                                                nameof(Cliente),
+                                                new { idNuevoCliente = usuarioID });
+                    }
+
                 }
                 else
                 {
@@ -158,9 +167,9 @@ namespace TP03_WebApp.Controllers
 
                 mensaje = mensaje + " Stack trace: " + ex.StackTrace;
                 _logger.LogError(mensaje);
-            }
 
-            return RedirectToAction(nameof(ClienteController.CreateCliente), nameof(Cliente));
+                return NotFound();
+            }            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
