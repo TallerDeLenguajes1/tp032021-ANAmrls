@@ -27,7 +27,7 @@ namespace TP03_WebApp.Models.DB
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
-                    string sqlQuery = "UPDATE Cliente " +
+                    string sqlQuery = "UPDATE Clientes " +
                                       "SET clienteActivo = 0 " +
                                       "WHERE clienteID = @clienteID;";
 

@@ -17,8 +17,8 @@ using NLog.Web;
 namespace TP03_WebApp
 {
     public class Startup
-    {     
-
+    {
+        private const int IdleTimeoutEnSegundos = 1200;
         static readonly DBTemp DB = new DBTemp(NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger());
         public Startup(IConfiguration configuration)
         {
@@ -26,9 +26,7 @@ namespace TP03_WebApp
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        
+        public IConfiguration Configuration { get; }        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -43,7 +41,7 @@ namespace TP03_WebApp
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
                 {
-                    options.IdleTimeout = TimeSpan.FromSeconds(3600);
+                    options.IdleTimeout = TimeSpan.FromSeconds(IdleTimeoutEnSegundos);
                     options.Cookie.HttpOnly = true;
                     options.Cookie.IsEssential = true;
                 });

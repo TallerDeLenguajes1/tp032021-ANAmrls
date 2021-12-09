@@ -1,4 +1,4 @@
-﻿@model TP03_WebApp.Models.ViewModels.ClienteCreateViewModel
+﻿@model ClienteCreateViewModel
 
 @{
     ViewData["Title"] = "Crear Cuenta de Cliente";
@@ -29,6 +29,10 @@
         <label asp-for="Telefono" class="form-label"></label>
         <input asp-for="Telefono" class="form-control" placeholder="Ej: 3815123123" />
         <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+    <div class="col-md-6  mt-3">
+        <label asp-for="Id" class="form-label">Id</label>
+        <input asp-for="Id" class="form-control" value="@Model.Id" readonly>
     </div>
     <div class="col-12 mt-3">
         <input type="submit" class="btn btn-primary" value="Guardar" />

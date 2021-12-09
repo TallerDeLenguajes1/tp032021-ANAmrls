@@ -8,6 +8,8 @@ namespace TP03_WebApp.Models.ViewModels
 {
     public class ClienteCreateViewModel
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Por favor ingrese su Nombre")]
         [StringLength(100)]
         public string Nombre { get; set; }

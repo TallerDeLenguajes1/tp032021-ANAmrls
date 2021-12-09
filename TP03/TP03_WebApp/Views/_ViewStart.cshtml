@@ -1,3 +1,22 @@
-﻿@{
-    Layout = (string)ViewData["Layout"] ?? "_Layout";
+﻿@{     
+    if (Context.Session.GetInt32("ID") != null)
+    {
+        switch (Context.Session.GetInt32("Nivel"))
+        {
+            case 3:
+                Layout = "_Layout";
+                break;
+            case 2:
+                Layout = "_CadeteLayout";
+                break;
+            case 1:
+                Layout = "_ClienteLayout";
+                break;
+        }
+    }
+    else
+    {
+        Layout = "_UsuarioLayout";
+    }
+
 }

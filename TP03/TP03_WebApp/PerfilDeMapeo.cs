@@ -10,6 +10,7 @@ namespace TP03_WebApp
         {
             //Maps para cadetes
             CreateMap<Cadete, CadeteViewModel>().ReverseMap();
+            CreateMap<Cadete, CadeteIndexViewModel>().ReverseMap();
             CreateMap<Cadete, CadeteAltaViewModel>().ReverseMap();
             CreateMap<Cadete, CadeteModificarViewModel>().ReverseMap();
             CreateMap<Cadete, CadeteEliminarViewModel>().ReverseMap();
@@ -25,6 +26,7 @@ namespace TP03_WebApp
             CreateMap<Cliente, ClienteIndexViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteCreateViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteEditViewModel>().ReverseMap();
+            CreateMap<Cliente, ClienteDeleteViewModel>().ReverseMap();
 
             //Maps para usuarios
             CreateMap<Usuario, UsuarioIndexViewModel>().ReverseMap();

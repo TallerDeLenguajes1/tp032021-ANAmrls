@@ -25,7 +25,10 @@
                             <a class="nav-link" asp-area="" asp-controller="Pedido" asp-action="CrearPedido">Realizar Pedido</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Cliente" asp-action="Edit">Modificar datos</a>
+                            <a class="nav-link" asp-area="" asp-controller="Cliente" asp-action="Edit">Modificar Datos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" asp-area="" asp-controller="Cliente" asp-action="Delete">Desactivar Cuenta</a>
                         </li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0" asp-action="LogOut" asp-controller="Usuario" method="post">
@@ -42,7 +45,7 @@
     </div>
 
     <footer class="border-top footer text-muted bg-dark">
-        <div class="container">
+        <div class="container text-center">
             &copy; 2021 - TP03_WebApp 
         </div>
     </footer>

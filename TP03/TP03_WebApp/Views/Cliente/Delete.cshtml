@@ -1,0 +1,37 @@
+﻿@model ClienteDeleteViewModel
+
+@{
+    ViewData["Title"] = "Desactivar Cuenta";
+}
+
+<h1>Desactivar Cuenta</h1>
+
+<h3>Esta seguro/a de que desea desactivar su cuenta?</h3>
+<div>
+    <hr />
+    <table class="table table-bordered w-50  text-center">
+        <thead class="table table-dark">
+            <tr>
+                <th scope="col"class="col-1">@Html.DisplayNameFor(model => model.Id)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.Nombre)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.Apellido)</th>
+            </tr>
+        </thead>
+        <tbody class="table-danger">
+            <tr>
+                <td>@Html.DisplayFor(model => model.Id)</td>
+                <td>@Html.DisplayFor(model => model.Nombre)</td>
+                <td>@Html.DisplayFor(model => model.Apellido)</td>
+            </tr>
+        </tbody>
+    </table>
+    <form class="row" asp-controller="Cliente" asp-action="Delete" method="post">
+        <div class="col-md-auto mt-3">
+            <input type="hidden" id="idCliente" name="idCliente" value="@Model.Id">
+            <input type="submit" value="Desactivar" class="btn btn-danger" />
+        </div>
+        <div class="col-md-auto mt-3">
+            <a class="btn btn-primary" asp-action="Index">Cancelar</a>
+        </div>
+    </form>
+</div>
