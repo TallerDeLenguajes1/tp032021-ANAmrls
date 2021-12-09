@@ -1,4 +1,4 @@
-﻿@model TP03_WebApp.Models.ViewModels.CadeteEliminarViewModel
+﻿@model CadeteEliminarViewModel
 @{
     ViewData["Title"] = "Confirmar Eliminación";
 }
@@ -26,7 +26,7 @@
     </table>
     <form class="row g-3" asp-action="EliminarCadete" asp-controller="Cadete" method="post">
         <div class="col-md-6 mt-3">
-            <a class="btn btn-primary" asp-area="" asp-controller="Cadete" asp-action="Index">Cancelar</a>
+            <a class="btn btn-primary" asp-area="" asp-controller="Cadete" asp-action="ListadoCadetes">Cancelar</a>
         </div>
         <div class="col-md-6 mt-3">
             <input type="hidden" id="idCadete" name="idCadete" value="@Model.Id">
@@ -34,3 +34,7 @@
         </div>
     </form>
 </div>
+
+@section scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

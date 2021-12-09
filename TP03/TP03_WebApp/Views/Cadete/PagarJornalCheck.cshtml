@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Confirmar Pago";
 }
-@model TP03_WebApp.Models.ViewModels.CadetePagarViewModel
+@model CadetePagarViewModel
 
 <div class="d-flex justify-content-center">
     <div class="card border-dark w-50 text-center">
@@ -12,7 +12,7 @@
             <p class="card-text">Monto a pagar: $@(Model.PedidosDelDia.Count(x => x.Estado == TP03_WebApp.Entidades.EstadoPedido.Entregado)*100)</p>
             <form class="row g-3" asp-action="PagarJornal" asp-controller="Cadete" method="post">
                 <div class="col-md-6 mt-3">
-                    <a class="btn btn-secondary" asp-area="" asp-controller="Cadete" asp-action="Index">Cancelar</a>
+                    <a class="btn btn-secondary" asp-area="" asp-controller="Cadete" asp-action="ListadoCadetes">Cancelar</a>
                 </div>
                 <div class="col-md-6 mt-3">
                     <input type="hidden" id="idCadete" name="idCadete" value="@Model.Id">
@@ -20,5 +20,9 @@
                 </div>
             </form>
         </div>
-    </div>    
+    </div>
 </div>
+
+@section scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,4 +1,4 @@
-﻿@model TP03_WebApp.Models.ViewModels.CadeteAltaViewModel
+﻿@model CadeteAltaViewModel
 @{
     ViewData["Title"] = "Alta Cadetes";
 }
@@ -10,29 +10,30 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="col-md-6 mt-3">
         <label asp-for="Nombre" class="form-label"></label>
-        <input asp-for="Nombre" class="form-control"/>
+        <input asp-for="Nombre" class="form-control" />
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
     <div class="col-md-6 mt-3">
         <label asp-for="Apellido" class="form-label"></label>
-        <input asp-for="Apellido" class="form-control"/>
+        <input asp-for="Apellido" class="form-control" />
         <span asp-validation-for="Apellido" class="text-danger"></span>
     </div>
     <div class="col-12  mt-3">
         <label asp-for="Direccion" class="form-label"></label>
-        <input asp-for="Direccion" class="form-control"/>
+        <input asp-for="Direccion" class="form-control" />
         <span asp-validation-for="Direccion" class="text-danger"></span>
     </div>
     <div class="col-md-6  mt-3">
         <label asp-for="Telefono" class="form-label"></label>
-        <input asp-for="Telefono" class="form-control" placeholder="Ej: 3815123123"/>
+        <input asp-for="Telefono" class="form-control" placeholder="Ej: 3815123123" />
         <span asp-validation-for="Telefono" class="text-danger"></span>
     </div>
-    <div class="col-12 mt-3">
-        <input type="submit" class="btn btn-primary" value="Guardar"/>
+    <div class="col-md-6  mt-3">
+        <label asp-for="Id" class="form-label">Id</label>
+        <input asp-for="Id" class="form-control" value="@Model.Id" readonly>
     </div>
-    <div class="col-md-6 mt-3">
-        <a class="btn btn-secondary" asp-controller="Cadete" asp-action="Index">Volver a la lista</a>
+    <div class="col-12 mt-3">
+        <input type="submit" class="btn btn-primary" value="Guardar" />
     </div>
 </form>
 

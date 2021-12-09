@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Modificar Cadete";
 }
-@model TP03_WebApp.Models.ViewModels.CadeteModificarViewModel
+@model CadeteModificarViewModel
 
 <div class="text-center">
     <h1 class="display-4">Modificar Cadete</h1>
@@ -31,9 +31,6 @@
     <div class="col-md-6  mt-3">
         <label asp-for="Id" class="form-label">Id</label>
         <input asp-for="Id" class="form-control" value="@Model.Id" readonly>
-    </div>
-    <div class="col-md-6 mt-3">
-        <a class="btn btn-primary" asp-controller="Cadete" asp-action="Index">Cancelar</a>
     </div>
     <div class="col-md-6 mt-3">
         <input type="submit" class="btn btn-primary" value="Confirmar Cambios"/>

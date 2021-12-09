@@ -70,12 +70,14 @@ namespace TP03_WebApp.Models.DB
                 {
                     string sqlQuery = "INSERT INTO Cadetes " +
                                         "(" +
+                                            "cadeteID, " +
                                             "cadeteNombre, " +
                                             "cadeteApellido, " +
                                             "cadeteTelefono, " +
                                             "cadeteDireccion" +
                                         ")" +
                                         "VALUES (" +
+                                            "@cadeteID, " +
                                             "@cadeteNombre, " +
                                             "@cadeteApellido, " +
                                             "@cadeteTelefono, " +
@@ -84,6 +86,7 @@ namespace TP03_WebApp.Models.DB
 
                     using (SQLiteCommand command = new SQLiteCommand(sqlQuery, connection))
                     {
+                        command.Parameters.AddWithValue("@cadeteID", cadete.Id);
                         command.Parameters.AddWithValue("@cadeteNombre", cadete.Nombre);
                         command.Parameters.AddWithValue("@cadeteApellido", cadete.Apellido);
                         command.Parameters.AddWithValue("@cadeteTelefono", cadete.Telefono);
